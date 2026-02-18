@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Block Puzzle - Rank Edition</title>
+    <title>Dombik Blast - Pro Edition</title>
     <style>
         :root {
             --cell: 42px;
@@ -29,14 +29,16 @@
             align-items: center;
         }
 
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(5px, -5px); }
-            50% { transform: translate(-5px, 5px); }
-            75% { transform: translate(5px, 5px); }
-            100% { transform: translate(0, 0); }
+        /* --- ANİMASYONLAR --- */
+        @keyframes screenShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-5px, 5px) rotate(-1deg); }
+            40% { transform: translate(5px, -5px) rotate(1deg); }
+            60% { transform: translate(-5px, -5px) rotate(-1deg); }
+            80% { transform: translate(5px, 5px) rotate(1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
-        .shake { animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both; }
+        .shake-active { animation: screenShake 0.3s ease-in-out; }
 
         @keyframes fire {
             0% { text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 -5px 15px #ff944d; box-shadow: 0 0 15px #ff4d4d; }
@@ -44,7 +46,34 @@
             100% { text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 -5px 15px #ff944d; box-shadow: 0 0 15px #ff4d4d; }
         }
 
+        /* VOID KARANLIK EFEKTİ */
+        @keyframes voidAnim {
+            0% { box-shadow: 0 0 15px #2D0054, inset 0 0 10px #000; border-color: #1a0033; filter: brightness(0.8); }
+            50% { box-shadow: 0 0 35px #6A00B0, inset 0 0 20px #000; border-color: #4B0082; filter: brightness(1.2); }
+            100% { box-shadow: 0 0 15px #2D0054, inset 0 0 10px #000; border-color: #1a0033; filter: brightness(0.8); }
+        }
+
         .rank-eqo-fx { animation: fire 1.5s infinite ease-in-out !important; border: 2px solid #ff4d4d !important; background: linear-gradient(45deg, #800000, #ff4d4d) !important; }
+        .rank-sengolo-fx { animation: voidAnim 2s infinite ease-in-out !important; border: 3px solid #4B0082 !important; background: linear-gradient(45deg, #000, #1a0033, #000) !important; color: #fff !important; }
+
+        @keyframes rankUpAnim {
+            0% { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .rank-up-overlay {
+            position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; background: rgba(0,0,0,0.7);
+            pointer-events: none; opacity: 0; transition: opacity 0.5s;
+        }
+        .rank-up-card {
+            background: linear-gradient(135deg, #FFD700, #DAA520); padding: 30px;
+            border-radius: 40px; border: 10px solid #fff; box-shadow: 0 0 50px rgba(255,215,0,0.5);
+            text-align: center; color: #131E3D; animation: rankUpAnim 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .confetti { position: absolute; width: 10px; height: 10px; z-index: 10000; pointer-events: none; }
 
         @keyframes dombikPop {
             0% { transform: translate(-50%, -20%) scale(0.5); opacity: 0; }
@@ -54,220 +83,157 @@
         }
 
         .dombik-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            font-weight: 900;
-            z-index: 10000;
-            pointer-events: none;
-            white-space: nowrap;
-            animation: dombikPop 1s ease-out forwards;
+            position: absolute; top: 50%; left: 50%; font-weight: 900; z-index: 10000;
+            pointer-events: none; white-space: nowrap; animation: dombikPop 1s ease-out forwards;
         }
 
         .super { color: var(--text-gold); font-size: 42px; text-shadow: 0 0 25px rgba(0,0,0,0.8), 0 4px 0 #b8860b; }
         .ultra { color: #fff; font-size: 48px; text-shadow: 0 0 35px #ff0000, 0 5px 0 #8b0000; letter-spacing: 1px; }
 
-        .game-over-gray { background: #444 !important; filter: grayscale(1); transition: all 1s ease; }
+        .will-explode { filter: brightness(1.6) saturate(1.4); box-shadow: 0 0 15px #fff !important; z-index: 5; transform: scale(0.96); }
+        .cell.game-over-gray { filter: grayscale(1) brightness(0.4) !important; transition: filter 2s ease, brightness 2s ease !important; }
 
         .game-wrapper {
-            background: var(--bg-game);
-            width: 100%;
-            max-width: 400px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
+            background: var(--bg-game); width: 100%; max-width: 400px; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; position: relative;
         }
 
-        .menu-visual {
-            width: 180px;
-            height: auto;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 5px 20px rgba(0,0,0,0.4));
-            animation: bounce 2s infinite ease-in-out;
-        }
-
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        #header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 50px 20px 5px 20px;
-            box-sizing: border-box;
-        }
-
+        #header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 50px 20px 5px 20px; box-sizing: border-box; }
         .high-score-box { display: flex; align-items: center; color: var(--text-gold); font-size: 24px; font-weight: bold; }
         .header-icons { display: flex; gap: 15px; align-items: center; }
 
         .rank-btn {
-            background: rgba(0,0,0,0.4);
-            padding: 6px 12px;
-            border-radius: 14px;
-            border: 2px solid var(--text-gold);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 130px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: 0.3s;
+            background: rgba(0,0,0,0.4); padding: 6px 12px; border-radius: 14px; border: 2px solid var(--text-gold);
+            color: white; cursor: pointer; display: flex; align-items: center; gap: 10px; min-width: 130px;
+            transition: all 0.3s ease;
         }
 
-        .rank-btn-icon {
-            width: 40px;
-            height: 40px;
-            background: #131E3D;
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .rank-btn-icon { width: 40px; height: 40px; background: #131E3D; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .rank-btn-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-        .rank-btn-text { display: flex; flex-direction: column; align-items: flex-start; }
-
         .settings-icon { font-size: 32px; color: #fff; cursor: pointer; }
 
-        .main-score-container { margin: 15px 0; text-align: center; }
-        #score { font-size: 75px; font-weight: 900; color: white; margin: 0; letter-spacing: -2px; }
+        #score { font-size: 75px; font-weight: 900; color: white; margin: 15px 0; letter-spacing: -2px; }
 
-        #game-container {
-            background: var(--bg-grid);
-            padding: 8px;
-            border-radius: 12px;
-            border: 4px solid #1a2a5a;
-            touch-action: none;
-            position: relative;
-        }
+        #game-container { background: var(--bg-grid); padding: 8px; border-radius: 12px; border: 4px solid #1a2a5a; position: relative; }
         #grid { display: grid; grid-template-columns: repeat(8, var(--cell)); grid-template-rows: repeat(8, var(--cell)); gap: var(--gap); }
-        .cell { width: var(--cell); height: var(--cell); background: var(--bg-cell); border-radius: var(--radius); position: relative; }
-        .filled { border-radius: var(--radius); box-shadow: inset 0 3px 0 rgba(255,255,255,0.3), inset 0 -3px 0 rgba(0,0,0,0.2); transition: background 0.5s ease; }
-
-        .particle, .confetti { position: absolute; pointer-events: none; z-index: 2000; border-radius: 2px; }
-
-        .c-1 { background: #FF6B00; } .c-2 { background: #22C55E; } .c-3 { background: #A855F7; }
-        .c-4 { background: #EAB308; } .c-5 { background: #3B82F6; } .c-6 { background: #06B6D4; }
-        .c-7 { background: #F43F5E; } .c-8 { background: #FF9FF3; } .c-9 { background: #54a0ff; }
-        .c-10 { background: #1dd1a1; } .c-11 { background: #ff9f43; } .c-12 { background: #5f27cd; }
+        .cell { width: var(--cell); height: var(--cell); background: var(--bg-cell); border-radius: var(--radius); transition: background 0.2s, filter 0.2s; position: relative; }
+        .filled { border-radius: var(--radius); box-shadow: inset 0 3px 0 rgba(255,255,255,0.3); }
 
         #dock { margin-top: 40px; display: flex; gap: 15px; height: 120px; align-items: center; }
         .slot { width: 105px; height: 105px; display: flex; justify-content: center; align-items: center; }
         .piece { display: grid; gap: 2px; transition: transform 0.1s; }
         .p-cell { width: 16px; height: 16px; border-radius: 3px; }
-
-        .dragging { position: fixed !important; z-index: 1000; transform: translateY(-100px) scale(1.5) !important; pointer-events: none; opacity: 1; }
-        .preview { opacity: 0.4 !important; }
+        .dragging { position: fixed !important; z-index: 1000; transform: translateY(-100px) scale(1.5) !important; pointer-events: none; }
+        .preview { opacity: 0.3 !important; }
 
         .overlay { position: fixed; inset: 0; background: rgba(19, 30, 61, 0.95); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .modal-card { background: #243b7a; padding: 25px; border-radius: 30px; text-align: center; border: 5px solid #4A76FD; box-shadow: 0 15px 30px rgba(0,0,0,0.5); width: 85%; max-width: 340px; max-height: 80vh; overflow-y: auto; }
+        .modal-card { background: #243b7a; padding: 25px; border-radius: 30px; text-align: center; border: 5px solid #4A76FD; width: 85%; max-width: 340px; max-height: 80vh; overflow-y: auto; }
 
-        .rank-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); margin: 8px 0; padding: 12px; border-radius: 15px; border: 1px solid transparent; transition: 0.3s; }
-        .rank-item.active { border-color: var(--text-gold); background: rgba(255,215,0,0.2); box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-
-        .rank-icon-placeholder {
-            width: 60px;
-            height: 60px;
-            background: #131E3D;
-            border-radius: 12px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+        .rank-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); margin: 8px 0; padding: 12px; border-radius: 15px; border: 1px solid transparent; }
+        .rank-item.active { border-color: var(--text-gold); background: rgba(255,215,0,0.15); }
+        .rank-icon-placeholder { width: 50px; height: 50px; background: #131E3D; border-radius: 10px; margin-right: 12px; overflow: hidden; }
         .rank-icon-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
-        .rank-info { text-align: left; flex-grow: 1; }
-        .rank-name { font-weight: bold; color: white; display: block; font-size: 15px; }
-        .rank-req { font-size: 11px; color: #aaa; }
-
-        .btn { width: 100%; padding: 16px 0; font-size: 20px; font-weight: bold; border-radius: 15px; border: none; background: linear-gradient(to bottom, #FFD700, #DAA520); color: #131E3D; margin: 10px 0; cursor: pointer; box-shadow: 0 6px 0 #9e7b00; transition: 0.1s; text-transform: uppercase; }
-        .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #9e7b00; }
-        .btn-menu { background: linear-gradient(to bottom, #ffffff, #c0c0c0); box-shadow: 0 6px 0 #888; }
-
-        #new-record-label { color: #FFD700; font-size: 24px; font-weight: 900; margin-bottom: -10px; text-shadow: 0 0 15px #FFD700; animation: pulse 1s infinite alternate; display: none; }
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
-
+        .btn { width: 100%; padding: 16px 0; font-size: 20px; font-weight: bold; border-radius: 15px; border: none; background: linear-gradient(to bottom, #FFD700, #DAA520); color: #131E3D; margin: 10px 0; cursor: pointer; box-shadow: 0 6px 0 #9e7b00; text-transform: uppercase; }
         .hidden { display: none !important; }
+
+        .particle { position: absolute; pointer-events: none; z-index: 2000; border-radius: 2px; }
+
+        #new-record-alert { color: var(--text-gold); font-size: 24px; font-weight: 900; text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); margin-bottom: 10px; animation: fire 1s infinite; }
+
+        /* RENKLER */
+        .c-1 { background: #FF6B00; } .c-2 { background: #22C55E; } .c-3 { background: #A855F7; }
+        .c-4 { background: #EAB308; } .c-5 { background: #3B82F6; } .c-6 { background: #06B6D4; }
+        .c-7 { background: #F43F5E; } .c-8 { background: #FF9FF3; } .c-9 { background: #54a0ff; }
+        .c-10 { background: #1dd1a1; } .c-11 { background: #ff9f43; } .c-12 { background: #5f27cd; }
     </style>
 </head>
 <body>
 
-<audio id="place-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
+<audio id="place-sound" src="koy.mp3" preload="auto"></audio>
+<audio id="blast-sound" src="patla.mp3" preload="auto"></audio>
 <audio id="bg-music" src="50.mp3" loop preload="auto"></audio>
+
+<div id="rank-up-popup" class="rank-up-overlay">
+    <div class="rank-up-card">
+        <h3 style="margin:0; font-size:18px; text-transform:uppercase;">RÜTBE ATLADIN!</h3>
+        <h1 id="pop-rank-name" style="margin:10px 0; font-size:32px;">ŞENGOLO</h1>
+        <div style="width:120px; height:120px; background:#fff; border-radius:20px; margin:15px auto; overflow:hidden;">
+            <img id="pop-rank-img" src="" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <p style="font-weight:bold; margin:0;">SEN BİR EFSANESİN!</p>
+    </div>
+</div>
 
 <div class="game-wrapper" id="main-wrapper">
     <div id="main-menu" class="overlay">
         <div class="modal-card">
-            <img src="logo.png" alt="Logo" class="menu-visual">
+            <img src="logo.png" alt="Logo" style="width:180px; margin-bottom:30px;">
             <button class="btn" onclick="startGame()">OYUNA BAŞLA</button>
-            <button class="btn btn-menu" onclick="showSettings()">AYARLAR</button>
+            <button class="btn" style="background:#fff;" onclick="showSettings()">AYARLAR</button>
         </div>
     </div>
 
     <div id="settings-menu" class="overlay hidden">
         <div class="modal-card">
-            <h2 style="color:white; margin-top:0;">AYARLAR</h2>
+            <h2 style="color:white;">AYARLAR</h2>
             <button id="vib-toggle-btn" class="btn" onclick="toggleVibration()">TİTREŞİM: AÇIK</button>
             <button id="music-toggle-btn" class="btn" onclick="toggleMusic()">MÜZİK: KAPALI</button>
             <button class="btn" onclick="resetGame()">BAŞTAN BAŞLA</button>
-            <button class="btn btn-menu" onclick="backToMenu()">ANA MENÜ</button>
-            <button class="btn" style="background:#ff4d4d; color:white; box-shadow: 0 6px 0 #a30000;" onclick="hideSettings()">KAPAT</button>
+            <button class="btn" onclick="backToMenu()">ANA MENÜ</button>
+            <button class="btn" style="background:#ff4d4d; color:white;" onclick="hideSettings()">KAPAT</button>
         </div>
     </div>
 
     <div id="rank-panel" class="overlay hidden">
         <div class="modal-card">
-            <h2 style="color:var(--text-gold); margin-top:0;">RÜTBELER</h2>
+            <h2 style="color:var(--text-gold);">RÜTBELER</h2>
             <div id="rank-list">
-                <div class="rank-item" id="rank-0">
-                    <div class="rank-icon-placeholder"><img src="dürümbüs_memo.png" onerror="this.parentElement.innerHTML='👨🏻‍'"></div>
-                    <div class="rank-info"><span class="rank-name">Dürümbüs Memo</span><span class="rank-req">0+ Rekor</span></div>
+                <div class="rank-item" id="rank-100000">
+                    <div class="rank-icon-placeholder"><img src="sengolo.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; color:#A855F7; display:block;">ŞENGOLO</span><span style="font-size:11px; color:#aaa;">100.000+ Rekor</span></div>
                 </div>
-                <div class="rank-item" id="rank-500">
-                    <div class="rank-icon-placeholder"><img src="vakko.png" onerror="this.parentElement.innerHTML='⚔️'"></div>
-                    <div class="rank-info"><span class="rank-name">VAKKO</span><span class="rank-req">500+ Rekor</span></div>
+                <div class="rank-item" id="rank-50000">
+                    <div class="rank-icon-placeholder"><img src="eko.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; color:#ff4d4d; display:block;">!EKO!</span><span style="font-size:11px; color:#aaa;">50.000+ Rekor</span></div>
                 </div>
-                <div class="rank-item" id="rank-1500">
-                    <div class="rank-icon-placeholder"><img src="TVS.png" onerror="this.parentElement.innerHTML='⚒️'"></div>
-                    <div class="rank-info"><span class="rank-name">SEDO TVS</span><span class="rank-req">1500+ Rekor</span></div>
-                </div>
-                <div class="rank-item" id="rank-3000">
-                    <div class="rank-icon-placeholder"><img src="feribot.png" onerror="this.parentElement.innerHTML='💎'"></div>
-                    <div class="rank-info"><span class="rank-name">FERİ-BOT</span><span class="rank-req">3000+ Rekor</span></div>
-                </div>
-                <div class="rank-item" id="rank-5000">
-                    <div class="rank-icon-placeholder"><img src="sekko.png" onerror="this.parentElement.innerHTML='🌀'"></div>
-                    <div class="rank-info"><span class="rank-name">RİDER 125</span><span class="rank-req">5000+ Rekor</span></div>
-                </div>
-                <div class="rank-item" id="rank-7500">
-                    <div class="rank-icon-placeholder"><img src="ibo.png" onerror="this.parentElement.innerHTML='⚡'"></div>
-                    <div class="rank-info"><span class="rank-name">İBO!!</span><span class="rank-req">7500+ Rekor</span></div>
+                <div class="rank-item" id="rank-20000">
+                    <div class="rank-icon-placeholder"><img src="ibo.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">İBO!!</span><span style="font-size:11px; color:#aaa;">20.000+ Rekor</span></div>
                 </div>
                 <div class="rank-item" id="rank-10000">
-                    <div class="rank-icon-placeholder" style="border-color:#ff4d4d;"><img src="eko.png" onerror="this.parentElement.innerHTML='🔥'"></div>
-                    <div class="rank-info"><span class="rank-name" style="color:#ff4d4d;">!EKO!</span><span class="rank-req">10000+ Rekor</span></div>
+                    <div class="rank-icon-placeholder"><img src="sekko.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">RİDER 125</span><span style="font-size:11px; color:#aaa;">100.000+ Rekor</span></div>
                 </div>
-
+                <div class="rank-item" id="rank-6000">
+                    <div class="rank-icon-placeholder"><img src="feribot.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">FERİ-BOT</span><span style="font-size:11px; color:#aaa;">6000+ Rekor</span></div>
+                </div>
+                <div class="rank-item" id="rank-4000">
+                    <div class="rank-icon-placeholder"><img src="TVS.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">SEDO TVS</span><span style="font-size:11px; color:#aaa;">4000+ Rekor</span></div>
+                </div>
+                <div class="rank-item" id="rank-1500">
+                    <div class="rank-icon-placeholder"><img src="vakko.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">VAKKO</span><span style="font-size:11px; color:#aaa;">1500+ Rekor</span></div>
+                </div>
+                <div class="rank-item" id="rank-0">
+                    <div class="rank-icon-placeholder"><img src="dürümbüs_memo.png"></div>
+                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">Dürümbüs Memo</span><span style="font-size:11px; color:#aaa;">0+ Rekor</span></div>
+                </div>
             </div>
-            <button class="btn" style="margin-top:20px;" onclick="document.getElementById('rank-panel').classList.add('hidden')">KAPAT</button>
+            <button class="btn" style="margin-top:20px;" onclick="hideRankPanel()">KAPAT</button>
         </div>
     </div>
 
     <div id="game-over" class="overlay hidden">
         <div class="modal-card" style="border-color: #ff4d4d;">
-            <div id="new-record-label">YENİ REKOR!</div>
-            <h1 style="color:#ff4d4d; font-size:38px; margin:0;">OYUN BİTTİ</h1>
-            <p style="color:white; margin:5px 0;">SKORUN</p>
-            <h2 id="final-score" style="font-size:65px; margin:10px 0; color:var(--text-gold);">0</h2>
+            <div id="new-record-alert" class="hidden">👑 YENİ REKOR! 👑</div>
+            <h1 style="color:#ff4d4d; margin:0;">OYUN BİTTİ</h1>
+            <p style="color:white; margin:10px 0;">SKORUN</p>
+            <h2 id="final-score" style="font-size:60px; margin:10px 0; color:var(--text-gold);">0</h2>
             <button class="btn" onclick="resetGame()">TEKRAR DENE</button>
-            <button class="btn btn-menu" onclick="backToMenu()">ANA MENÜ</button>
+            <button class="btn" style="background:#fff;" onclick="backToMenu()">ANA MENÜ</button>
         </div>
     </div>
 
@@ -275,19 +241,17 @@
         <div class="high-score-box">👑 <span id="best">0</span></div>
         <div class="header-icons">
             <div class="rank-btn" id="header-rank-btn" onclick="showRankPanel()">
-                <div class="rank-btn-icon" id="header-rank-icon">
-                    <img src="dürümbüs_memo.png" id="current-rank-img" onerror="this.style.display='none'">
-                </div>
-                <div class="rank-btn-text">
-                    <div style="font-size: 8px; color: var(--text-gold); opacity: 0.8;">RÜTBE</div>
-                    <div id="current-rank-name" style="font-size: 11px; font-weight: bold; white-space: nowrap;">Dürümbüs Memo</div>
+                <div class="rank-btn-icon"><img src="dürümbüs_memo.png" id="current-rank-img"></div>
+                <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                    <span style="font-size:8px; color:var(--text-gold);">RÜTBE</span>
+                    <span id="current-rank-name" style="font-size:11px; font-weight:bold; white-space:nowrap;">Dürümbüs Memo</span>
                 </div>
             </div>
             <div class="settings-icon" onclick="showSettings()">⚙️</div>
         </div>
     </div>
 
-    <div class="main-score-container"><h1 id="score">0</h1></div>
+    <h1 id="score">0</h1>
     <div id="game-container"><div id="grid"></div></div>
     <div id="dock"></div>
 </div>
@@ -295,318 +259,340 @@
 <script>
     const gridEl = document.getElementById('grid');
     const dockEl = document.getElementById('dock');
-    const gameContainer = document.getElementById('game-container');
     const scoreEl = document.getElementById('score');
     const bestEl = document.getElementById('best');
-    const currentRankEl = document.getElementById('current-rank-name');
+    const mainWrapper = document.getElementById('main-wrapper');
+    const currentRankName = document.getElementById('current-rank-name');
     const currentRankImg = document.getElementById('current-rank-img');
     const headerRankBtn = document.getElementById('header-rank-btn');
-    const wrapper = document.getElementById('main-wrapper');
-    const vibBtn = document.getElementById('vib-toggle-btn');
-    const musicBtn = document.getElementById('music-toggle-btn'); // MÜZİK BUTONU
     const gameOverEl = document.getElementById('game-over');
     const finalScoreEl = document.getElementById('final-score');
-    const recordLabel = document.getElementById('new-record-label');
+    const bgMusic = document.getElementById('bg-music');
     const placeSound = document.getElementById('place-sound');
-    const bgMusic = document.getElementById('bg-music'); // MÜZİK ELEMENTİ
+    const blastSound = document.getElementById('blast-sound');
+    const newRecordAlert = document.getElementById('new-record-alert');
 
     let score = 0;
-    let oldBest = 0;
-    let isVibrationEnabled = localStorage.getItem('vibrationEnabled') !== 'false';
-    let isMusicEnabled = localStorage.getItem('musicEnabled') === 'true'; // MÜZİK DURUMU
-    let lastSpawnedIndices = [];
-    let isGameActive = true;
-
-    function getSavedBest() {
-        let saved = localStorage.getItem('blockPuzzleHighScore');
-        return (!saved) ? 0 : parseInt(saved);
-    }
-
-    let best = getSavedBest();
-    oldBest = best;
-    bestEl.innerText = best;
     let board = Array(8).fill().map(() => Array(8).fill(null));
     let activeDrag = null;
+    let isGameActive = false;
+    let isVibrationEnabled = localStorage.getItem('vibrationEnabled') !== 'false';
+    let isMusicEnabled = localStorage.getItem('musicEnabled') === 'true';
+    let sessionHighScoreReached = false;
+    let currentRankThreshold = 0;
 
-    const shapes = [
-        {s:[[1,1],[1,1]], c:'c-2'},
-        {s:[[1,1,1],[1,1,1],[1,1,1]], c:'c-3'},
-        {s:[[1,1,1],[1,1,1]], c:'c-10'},
-        {s:[[1,1],[1,1],[1,1]], c:'c-11'},
-        {s:[[1,1]], c:'c-4'},
-        {s:[[1,1,1]], c:'c-4'},
-        {s:[[1,1,1,1]], c:'c-5'},
-        {s:[[1],[1]], c:'c-4'},
-        {s:[[1],[1],[1]], c:'c-6'},
-        {s:[[1],[1],[1],[1]], c:'c-5'},
-        {s:[[0,1,0],[1,1,1]], c:'c-12'},
-        {s:[[1,1,1],[0,1,0]], c:'c-12'},
-        {s:[[0,1],[1,1],[0,1]], c:'c-12'},
-        {s:[[1,0],[1,1],[1,0]], c:'c-12'},
-        {s:[[1,1],[1,0]], c:'c-7'},
-        {s:[[1,1],[0,1]], c:'c-7'},
-        {s:[[1,0],[1,1]], c:'c-7'},
-        {s:[[0,1],[1,1]], c:'c-7'},
-        {s:[[1,1,1],[1,0,0]], c:'c-9'},
-        {s:[[1,1,1],[0,0,1]], c:'c-9'},
-        {s:[[1,1],[1,0],[1,0]], c:'c-9'},
-        {s:[[1,1],[0,1],[0,1]], c:'c-9'},
-        {s:[[1,1,0],[0,1,1]], c:'c-8'},
-        {s:[[0,1,1],[1,1,0]], c:'c-8'},
-        {s:[[1,0],[1,1],[0,1]], c:'c-8'},
-        {s:[[0,1],[1,1],[1,0]], c:'c-8'}
+    const RANK_LEVELS = [
+        {limit: 100000, name: "ŞENGOLO", img: "sengolo.png", id: "rank-100000", fx: "rank-sengolo-fx"},
+        {limit: 50000, name: "EQO", img: "eko.png", id: "rank-50000", fx: "rank-eqo-fx"},
+        {limit: 20000, name: "İBO!!", img: "ibo.png", id: "rank-20000", fx: ""},
+        {limit: 10000, name: "RİDER 125", img: "sekko.png", id: "rank-10000", fx: ""},
+        {limit: 6000, name: "FERİ-BOT", img: "feribot.png", id: "rank-6000", fx: ""},
+        {limit: 4000, name: "SEDO TVS", img: "TVS.png", id: "rank-4000", fx: ""},
+        {limit: 1500, name: "VAKKO", img: "vakko.png", id: "rank-1500", fx: ""},
+        {limit: 0, name: "Dürümbüs Memo", img: "dürümbüs_memo.png", id: "rank-0", fx: ""}
     ];
 
-    function updateRankSystem() {
-        let rankName = "Dürümbüs Memo";
-        let rankImg = "dürümbüs_memo.png";
-        let rankId = "rank-0";
-        headerRankBtn.classList.remove('rank-eqo-fx');
+    const SHAPES_SMALL = [
+        {s:[[1,1],[1,1]], c:'c-2', n:'kutu2x2'},
+        {s:[[1,1]], c:'c-4', n:'yatay2'},
+        {s:[[1],[1]], c:'c-4', n:'dikey2'},
+        {s:[[1,1,1]], c:'c-10', n:'yatay3'},
+        {s:[[1,1],[1,0]], c:'c-7', n:'l_kucuk'}
+    ];
 
-        if (best >= 10000) {
-            rankName = "EQO"; rankImg = "kralyakup.png"; rankId = "rank-10000";
-            headerRankBtn.classList.add('rank-eqo-fx');
-        }
-        else if (best >= 7500) { rankName = "BLOK İLAHİ"; rankImg = "ilah.png"; rankId = "rank-7500"; }
-        else if (best >= 5000) { rankName = "EFSANE"; rankImg = "efsane.png"; rankId = "rank-5000"; }
-        else if (best >= 3000) { rankName = "ELMAS LİGİ"; rankImg = "elmas.png"; rankId = "rank-3000"; }
-        else if (best >= 1500) { rankName = "BLOK USTASI"; rankImg = "blok_ustasi.png"; rankId = "rank-1500"; }
-        else if (best >= 500) { rankName = "VAKKO"; rankImg = "vakko.png"; rankId = "rank-500"; }
+    const SHAPES_NORMAL = [
+        {s:[[1,1,1],[1,1,1],[1,1,1]], c:'c-3', n:'kutu3x3'},
+        {s:[[1,1,1,1]], c:'c-5', n:'yatay4'}, {s:[[1],[1],[1],[1]], c:'c-5', n:'dikey4'},
+        {s:[[1,1,1],[0,1,0]], c:'c-12', n:'t_blok'},
+        {s:[[1,0],[1,0],[1,1]], c:'c-7', n:'l_buyuk'},
+        {s:[[1,1,0],[0,1,1]], c:'c-1', n:'z_yatay'}, {s:[[0,1],[1,1],[1,0]], c:'c-1', n:'z_dikey'},
+        {s:[[0,1,1],[1,1,0]], c:'c-8', n:'s_yatay'}, {s:[[1,0],[1,1],[0,1]], c:'c-8', n:'s_dikey'}
+    ];
 
-        currentRankEl.innerText = rankName;
-        currentRankImg.src = rankImg;
-        currentRankImg.style.display = 'block';
+    function getSavedBest() { return parseInt(localStorage.getItem('blockPuzzleHighScore')) || 0; }
+    let best = getSavedBest();
+    bestEl.innerText = best;
 
-        document.querySelectorAll('.rank-item').forEach(item => item.classList.remove('active'));
-        const activeItem = document.getElementById(rankId);
-        if(activeItem) activeItem.classList.add('active');
+    function showRankPanel() { document.getElementById('rank-panel').classList.remove('hidden'); }
+    function hideRankPanel() { document.getElementById('rank-panel').classList.add('hidden'); }
+    function showSettings() { document.getElementById('settings-menu').classList.remove('hidden'); }
+    function hideSettings() { document.getElementById('settings-menu').classList.add('hidden'); }
+
+    function playSfx(audio) {
+        if (!audio) return;
+        audio.currentTime = 0;
+        audio.play().catch(e => console.log("Ses çalma hatası:", e));
+    }
+
+    function startGame() {
+        document.getElementById('main-menu').classList.add('hidden');
+        resetGame();
+        if(isMusicEnabled) bgMusic.play().catch(e => console.log("Müzik başlatılamadı"));
+    }
+
+    function backToMenu() {
+        gameOverEl.classList.add('hidden');
+        document.getElementById('settings-menu').classList.add('hidden');
+        document.getElementById('main-menu').classList.remove('hidden');
+        isGameActive = false;
     }
 
     function toggleMusic() {
         isMusicEnabled = !isMusicEnabled;
         localStorage.setItem('musicEnabled', isMusicEnabled);
-        updateSettingsButtons();
-        if (isMusicEnabled) {
-            bgMusic.play().catch(e => console.log("Müzik başlatılamadı"));
-        } else {
-            bgMusic.pause();
-        }
+        document.getElementById('music-toggle-btn').innerText = `MÜZİK: ${isMusicEnabled ? 'AÇIK' : 'KAPALI'}`;
+        if(isMusicEnabled) bgMusic.play(); else bgMusic.pause();
     }
 
     function toggleVibration() {
         isVibrationEnabled = !isVibrationEnabled;
         localStorage.setItem('vibrationEnabled', isVibrationEnabled);
-        updateSettingsButtons();
-        if(isVibrationEnabled && navigator.vibrate) navigator.vibrate(50);
+        document.getElementById('vib-toggle-btn').innerText = `TİTREŞİM: ${isVibrationEnabled ? 'AÇIK' : 'KAPALI'}`;
     }
 
-    function updateSettingsButtons() {
-        vibBtn.innerText = `TİTREŞİM: ${isVibrationEnabled ? 'AÇIK' : 'KAPALI'}`;
-        musicBtn.innerText = `MÜZİK: ${isMusicEnabled ? 'AÇIK' : 'KAPALI'}`;
+    function triggerRankCelebration(rankData) {
+        const pop = document.getElementById('rank-up-popup');
+        document.getElementById('pop-rank-name').innerText = rankData.name;
+        document.getElementById('pop-rank-img').src = rankData.img;
+        pop.style.opacity = '1';
+        createConfetti();
+        if (isVibrationEnabled && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        setTimeout(() => { pop.style.opacity = '0'; }, 3000);
     }
 
-    function showRankPanel() { document.getElementById('rank-panel').classList.remove('hidden'); updateRankSystem(); }
-
-    function startGame() {
-        document.getElementById('main-menu').classList.add('hidden');
-        updateRankSystem();
-        resetGame();
-        if (isMusicEnabled) bgMusic.play().catch(e => {});
-    }
-
-    function showSettings() {
-        updateSettingsButtons();
-        document.getElementById('settings-menu').classList.remove('hidden');
-    }
-
-    function hideSettings() { document.getElementById('settings-menu').classList.add('hidden'); }
-    function backToMenu() { gameOverEl.classList.add('hidden'); document.getElementById('settings-menu').classList.add('hidden'); document.getElementById('main-menu').classList.remove('hidden'); bgMusic.pause(); }
-
-    function triggerShake() {
-        if(!isVibrationEnabled) return;
-        wrapper.classList.remove('shake'); void wrapper.offsetWidth; wrapper.classList.add('shake');
-        if(navigator.vibrate) navigator.vibrate(100);
-    }
-
-    function createParticles(r, c) {
-        const cell = document.getElementById(`r${r}c${c}`);
-        if(!cell) return;
-        const rect = cell.getBoundingClientRect();
-        const color = window.getComputedStyle(cell).backgroundColor;
-        for (let i = 0; i < 6; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle'; p.style.backgroundColor = color;
-            p.style.width = '6px'; p.style.height = '6px';
-            p.style.left = (rect.left + rect.width/2) + 'px'; p.style.top = (rect.top + rect.height/2) + 'px';
-            document.body.appendChild(p);
-            const angle = Math.random() * Math.PI * 2;
-            const vel = 30 + Math.random() * 40;
-            p.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(angle)*vel}px, ${Math.sin(angle)*vel}px) scale(0)`, opacity: 0 }], { duration: 500 }).onfinish = () => p.remove();
+    function createConfetti() {
+        for(let i=0; i<50; i++) {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.backgroundColor = ['#FFD700', '#FFFFFF', '#FF6B00', '#4A76FD', '#A855F7'][Math.floor(Math.random()*5)];
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.top = '-10px';
+            document.body.appendChild(c);
+            c.animate([
+                { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                { transform: `translate(${(Math.random()-0.5)*200}px, 100vh) rotate(${Math.random()*360}deg)`, opacity: 0 }
+            ], { duration: 2000 + Math.random()*2000 }).onfinish = () => c.remove();
         }
     }
 
-    function showComboText(count) {
-        const text = document.createElement('div');
-        text.className = 'dombik-text ' + (count >= 3 ? 'ultra' : 'super');
-        text.innerText = count >= 3 ? 'ULTRA DOMBİK!' : 'SÜPER DOMBİK!';
-        gameContainer.appendChild(text);
-        setTimeout(() => text.remove(), 1000);
-    }
+    function updateRankSystem(isNewGameStart = false) {
+        let bestScore = Math.max(score, best);
+        let currentRank = RANK_LEVELS.find(r => bestScore >= r.limit);
 
-    function resetGame() {
-        isGameActive = true; score = 0; scoreEl.innerText = "0";
-        oldBest = getSavedBest(); bestEl.innerText = oldBest;
-        recordLabel.style.display = 'none'; gameOverEl.classList.add('hidden');
-        init();
-    }
+        headerRankBtn.classList.remove('rank-eqo-fx', 'rank-sengolo-fx');
+        if (currentRank.fx) headerRankBtn.classList.add(currentRank.fx);
 
-    function init() {
-        gridEl.innerHTML = '';
-        board = Array(8).fill().map(() => Array(8).fill(null));
-        for(let r=0; r<8; r++) {
-            for(let c=0; c<8; c++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell'; cell.id = `r${r}c${c}`;
-                gridEl.appendChild(cell);
-            }
+        currentRankName.innerText = currentRank.name;
+        currentRankImg.src = currentRank.img;
+
+        document.querySelectorAll('.rank-item').forEach(el => el.classList.remove('active'));
+        const activeItem = document.getElementById(currentRank.id);
+        if(activeItem) activeItem.classList.add('active');
+
+        if (!isNewGameStart && isGameActive && currentRank.limit > currentRankThreshold) {
+            currentRankThreshold = currentRank.limit;
+            triggerRankCelebration(currentRank);
         }
-        spawn();
-        updateRankSystem();
+        if (isNewGameStart) { currentRankThreshold = currentRank.limit; }
     }
 
     function spawn() {
         if(!isGameActive) return;
         dockEl.innerHTML = '';
-        let currentBatch = [];
+        let fillRatio = board.flat().filter(c => c !== null).length / 64;
+        let canFitLarge = false;
+        for(let r=0; r <= 5; r++) {
+            for(let c=0; c <= 5; c++) {
+                let clear = true;
+                for(let i=0; i<3; i++) for(let j=0; j<3; j++) if(board[r+i][c+j]) clear = false;
+                if(clear) { canFitLarge = true; break; }
+            }
+            if(canFitLarge) break;
+        }
+
+        let pool = (!canFitLarge || fillRatio > 0.75) ? SHAPES_SMALL : [...SHAPES_SMALL, ...SHAPES_NORMAL];
+        let currentHandNames = [];
         for(let i=0; i<3; i++) {
-            let idx; do { idx = Math.floor(Math.random() * shapes.length); } while (lastSpawnedIndices.includes(idx) || currentBatch.includes(idx));
-            currentBatch.push(idx);
-            const data = shapes[idx];
+            let shapeObj; let attempts = 0;
+            do {
+                shapeObj = pool[Math.floor(Math.random() * pool.length)];
+                attempts++;
+            } while (i > 0 && shapeObj.n === currentHandNames[i-1] && attempts < 20);
+
+            currentHandNames.push(shapeObj.n);
             const slot = document.createElement('div'); slot.className = 'slot';
             const piece = document.createElement('div'); piece.className = 'piece';
-            piece.dataset.shape = JSON.stringify(data.s); piece.dataset.color = data.c;
-            piece.style.gridTemplateColumns = `repeat(${data.s[0].length}, 16px)`;
-            data.s.forEach(row => row.forEach(v => {
-                const d = document.createElement('div'); d.className = v ? 'p-cell filled ' + data.c : 'p-cell';
-                piece.appendChild(d);
+            piece.dataset.shape = JSON.stringify(shapeObj.s);
+            piece.dataset.color = shapeObj.c;
+            piece.style.gridTemplateColumns = `repeat(${shapeObj.s[0].length}, 16px)`;
+            shapeObj.s.forEach(row => row.forEach(v => {
+                const dc = document.createElement('div');
+                dc.className = v ? `p-cell filled ${shapeObj.c}` : 'p-cell';
+                piece.appendChild(dc);
             }));
             piece.onpointerdown = (e) => {
                 if(!isGameActive) return;
                 const rect = piece.getBoundingClientRect();
-                activeDrag = { el: piece, shape: data.s, color: data.c, offsetX: rect.width / 2, offsetY: rect.height / 2 };
+                activeDrag = { el: piece, shape: shapeObj.s, color: shapeObj.c, ox: rect.width/2, oy: rect.height/2 };
                 piece.classList.add('dragging'); piece.setPointerCapture(e.pointerId);
             };
             slot.appendChild(piece); dockEl.appendChild(slot);
         }
-        lastSpawnedIndices = currentBatch;
         checkLose();
     }
 
     window.onpointermove = (e) => {
         if(!activeDrag || !isGameActive) return;
-        activeDrag.el.style.left = (e.clientX - activeDrag.offsetX) + 'px';
-        activeDrag.el.style.top = (e.clientY - activeDrag.offsetY) + 'px';
-        clearPreview();
+        activeDrag.el.style.left = (e.clientX - activeDrag.ox) + 'px';
+        activeDrag.el.style.top = (e.clientY - activeDrag.oy) + 'px';
+        document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
         const coords = getTarget(e);
-        if(coords && canPlace(coords)) coords.forEach(p => document.getElementById(`r${p.r}c${p.c}`).classList.add('preview', activeDrag.color, 'filled'));
+        if(coords && coords.every(p => !board[p.r][p.c])) {
+            coords.forEach(p => document.getElementById(`r${p.r}c${p.c}`).classList.add('preview', activeDrag.color, 'filled'));
+            updateExplosionPreview(coords);
+        } else updateExplosionPreview(null);
     };
 
     window.onpointerup = (e) => {
-        if(!activeDrag || !isGameActive) return;
+        if(!activeDrag) return;
         const coords = getTarget(e);
-        if(coords && canPlace(coords)) {
-            if(placeSound) { placeSound.currentTime = 0; placeSound.play().catch(e=>{}); }
-            let count = activeDrag.shape.flat().filter(v => v === 1).length;
-            score += count; scoreEl.innerText = score;
-            if(score > best) { best = score; localStorage.setItem('blockPuzzleHighScore', best.toString()); bestEl.innerText = best; updateRankSystem(); }
-            coords.forEach(p => { board[p.r][p.c] = activeDrag.color; document.getElementById(`r${p.r}c${p.c}`).className = `cell filled ${activeDrag.color}`; });
-            activeDrag.el.remove(); checkLines(count);
+        if(coords && coords.every(p => !board[p.r][p.c])) {
+            playSfx(placeSound);
+            updateScore(activeDrag.shape.flat().filter(v => v).length);
+            coords.forEach(p => {
+                board[p.r][p.c] = activeDrag.color;
+                document.getElementById(`r${p.r}c${p.c}`).className = `cell filled ${activeDrag.color}`;
+            });
+            activeDrag.el.remove(); checkLines();
             if(dockEl.querySelectorAll('.piece').length === 0) spawn(); else checkLose();
         } else { activeDrag.el.classList.remove('dragging'); activeDrag.el.style.left = '0'; activeDrag.el.style.top = '0'; }
-        activeDrag = null;
+        updateExplosionPreview(null); activeDrag = null;
     };
 
     function getTarget(e) {
-        const rect = gridEl.getBoundingClientRect();
-        const cellSize = rect.width / 8;
-        const col = Math.round((e.clientX - (activeDrag.shape[0].length * cellSize / 2) - rect.left) / cellSize);
-        const row = Math.round((e.clientY - 100 - (activeDrag.shape.length * cellSize / 2) - rect.top) / cellSize);
-        const coords = [];
+        if(!activeDrag) return null;
+        const rect = gridEl.getBoundingClientRect(); const cs = rect.width / 8;
+        const col = Math.round((e.clientX - (activeDrag.shape[0].length * cs/2) - rect.left) / cs);
+        const row = Math.round((e.clientY - 100 - (activeDrag.shape.length * cs/2) - rect.top) / cs);
+        const res = [];
         for(let i=0; i<activeDrag.shape.length; i++) {
             for(let j=0; j<activeDrag.shape[0].length; j++) {
                 if(activeDrag.shape[i][j]) {
-                    const tr = row + i, tc = col + j;
-                    if(tr<0 || tr>=8 || tc<0 || tc>=8) return null;
-                    coords.push({r: tr, c: tc});
+                    let tr = row + i, tc = col + j;
+                    if(tr < 0 || tr >= 8 || tc < 0 || tc >= 8) return null;
+                    res.push({r: tr, c: tc});
                 }
             }
         }
-        return coords;
+        return res;
     }
 
-    function canPlace(coords) { return coords.every(p => !board[p.r][p.c]); }
-    function clearPreview() { document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; }); }
+    function updateScore(points) {
+        score += points; scoreEl.innerText = score;
+        if(score > best) {
+            sessionHighScoreReached = true; best = score;
+            localStorage.setItem('blockPuzzleHighScore', best.toString()); bestEl.innerText = best;
+        }
+        updateRankSystem();
+    }
 
-    function checkLines(lastSize) {
+    function updateExplosionPreview(coords) {
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('will-explode'));
+        if(!coords) return;
+        let tempBoard = board.map(row => [...row]);
+        coords.forEach(p => tempBoard[p.r][p.c] = 'temp');
+        let rs = [], cs = [];
+        for(let r=0; r<8; r++) if(tempBoard[r].every(v => v !== null)) rs.push(r);
+        for(let c=0; c<8; c++) { let f = true; for(let r=0; r<8; r++) if(tempBoard[r][c] === null) f = false; if(f) cs.push(c); }
+        rs.forEach(r => { for(let c=0; c<8; c++) document.getElementById(`r${r}c${c}`).classList.add('will-explode'); });
+        cs.forEach(c => { for(let r=0; r<8; r++) document.getElementById(`r${r}c${c}`).classList.add('will-explode'); });
+    }
+
+    function checkLines() {
         let rs = [], cs = [];
         for(let i=0; i<8; i++) { if(board[i].every(v => v)) rs.push(i); if(board.every(row => row[i])) cs.push(i); }
         let total = rs.length + cs.length;
         if(total > 0) {
-            triggerShake(); if(total >= 2) showComboText(total);
-            score += (lastSize * 5 * total); scoreEl.innerText = score;
-            if(score > best) { best = score; localStorage.setItem('blockPuzzleHighScore', best.toString()); bestEl.innerText = best; updateRankSystem(); }
+            playSfx(blastSound);
+            if(total >= 2) { triggerScreenShake(); if(isVibrationEnabled && navigator.vibrate) navigator.vibrate([100, 50, 100]); }
+            else if(isVibrationEnabled && navigator.vibrate) navigator.vibrate(50);
+
+            // ÇARPAN SİSTEMİ
+            let basePoints = total * 64;
+            let finalPoints = basePoints;
+            if(total === 2) finalPoints = basePoints * 4;
+            if(total >= 3) finalPoints = basePoints * 10;
+
+            updateScore(finalPoints);
+
             const toClear = [];
             rs.forEach(r => { for(let c=0; c<8; c++) toClear.push({r,c}); });
             cs.forEach(c => { for(let r=0; r<8; r++) if(!rs.includes(r)) toClear.push({r,c}); });
             toClear.forEach(p => { createParticles(p.r, p.c); board[p.r][p.c] = null; document.getElementById(`r${p.r}c${p.c}`).className = 'cell'; });
+            if(total >= 2) showComboText(total);
         }
     }
 
-    function animateScore(target) {
-        let current = 0;
-        const duration = 1500;
-        const startTime = performance.now();
-        function update(time) {
-            const elapsed = time - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const ease = 1 - Math.pow(1 - progress, 3);
-            current = Math.floor(ease * target);
-            finalScoreEl.innerText = current;
-            if (progress < 1) requestAnimationFrame(update);
-            else finalScoreEl.innerText = target;
+    function triggerScreenShake() { mainWrapper.classList.add('shake-active'); setTimeout(() => mainWrapper.classList.remove('shake-active'), 300); }
+
+    function createParticles(r, c) {
+        const cell = document.getElementById(`r${r}c${c}`);
+        const rect = cell.getBoundingClientRect();
+        const color = window.getComputedStyle(cell).backgroundColor;
+        for(let i=0; i<6; i++) {
+            const p = document.createElement('div'); p.className = 'particle'; p.style.backgroundColor = color;
+            p.style.width = '6px'; p.style.height = '6px'; p.style.left = (rect.left + 21) + 'px'; p.style.top = (rect.top + 21) + 'px';
+            document.body.appendChild(p);
+            p.animate([{transform:'translate(0,0) scale(1)', opacity:1}, {transform:`translate(${(Math.random()-0.5)*100}px,${(Math.random()-0.5)*100}px) scale(0)`, opacity:0}], 500).onfinish = () => p.remove();
         }
-        requestAnimationFrame(update);
+    }
+
+    function showComboText(n) {
+        const t = document.createElement('div'); t.className = 'dombik-text ' + (n >= 3 ? 'ultra' : 'super');
+        t.innerText = n >= 3 ? 'ULTRA DOMBİK x10!' : 'SÜPER DOMBİK x4!';
+        document.getElementById('game-container').appendChild(t); setTimeout(() => t.remove(), 1000);
     }
 
     function checkLose() {
-        const pieces = dockEl.querySelectorAll('.piece');
-        if (pieces.length === 0) return;
+        const pieces = dockEl.querySelectorAll('.piece'); if (pieces.length === 0) return;
         let canMove = false;
         pieces.forEach(p => {
             const shape = JSON.parse(p.dataset.shape);
-            for(let r=0; r<=8-shape.length; r++) {
-                for(let c=0; c<=8-shape[0].length; c++) {
+            for(let r=0; r <= 8 - shape.length; r++) {
+                for(let c=0; c <= 8 - shape[0].length; c++) {
                     let fit = true;
-                    for(let i=0; i<shape.length; i++) { for(let j=0; j<shape[0].length; j++) { if(shape[i][j] && board[r+i][c+j]) fit = false; } }
+                    for(let i=0; i<shape.length; i++) for(let j=0; j<shape[0].length; j++) if(shape[i][j] && board[r+i][c+j]) fit = false;
                     if(fit) canMove = true;
                 }
             }
         });
-        if(!canMove && isGameActive) {
-            isGameActive = false;
-            document.querySelectorAll('.cell.filled').forEach(c => c.classList.add('game-over-gray'));
-            setTimeout(() => {
-                gameOverEl.classList.remove('hidden');
-                animateScore(score);
-                if(score > oldBest && score > 0) recordLabel.style.display = 'block';
-                bgMusic.pause();
-            }, 1500);
+        if(!canMove) {
+            isGameActive = false; document.querySelectorAll('.cell.filled').forEach(cell => cell.classList.add('game-over-gray'));
+            setTimeout(() => { if(sessionHighScoreReached) newRecordAlert.classList.remove('hidden'); gameOverEl.classList.remove('hidden'); animateNumber(0, score, finalScoreEl, 1500); }, 2000);
         }
     }
 
-    // Başlangıç ayar butonlarını güncelle
-    updateSettingsButtons();
-    updateRankSystem();
+    function animateNumber(s, e, el, d) {
+        let start = null;
+        function step(ts) {
+            if (!start) start = ts; const p = Math.min((ts - start) / d, 1);
+            el.innerText = Math.floor(p * (e - s) + s); if (p < 1) window.requestAnimationFrame(step); else el.innerText = e;
+        }
+        window.requestAnimationFrame(step);
+    }
+
+    function resetGame() {
+        hideSettings(); score = 0; sessionHighScoreReached = false; scoreEl.innerText = "0";
+        isGameActive = true; board = Array(8).fill().map(() => Array(8).fill(null));
+        gridEl.innerHTML = '';
+        for(let r=0; r<8; r++) {
+            for(let c=0; c<8; c++) {
+                const cell = document.createElement('div'); cell.className = 'cell'; cell.id = `r${r}c${c}`; gridEl.appendChild(cell);
+            }
+        }
+        gameOverEl.classList.add('hidden'); spawn(); updateRankSystem(true);
+    }
+    updateRankSystem(true);
 </script>
 </body>
 </html>
