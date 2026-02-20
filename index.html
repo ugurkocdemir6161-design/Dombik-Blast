@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Dombik Blast - Pro Edition</title>
@@ -18,10 +18,11 @@
         }
 
         body {
-            background: #1a1a1a;
+            background: #4A76FD;
             color: #fff;
             font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
             margin: 0;
+            padding: 0;
             overflow: hidden;
             touch-action: none;
             display: flex;
@@ -29,7 +30,6 @@
             align-items: center;
         }
 
-        /* --- ANİMASYONLAR --- */
         @keyframes screenShake {
             0% { transform: translate(0, 0) rotate(0deg); }
             20% { transform: translate(-5px, 5px) rotate(-1deg); }
@@ -45,16 +45,52 @@
             50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff4d4d, 0 -10px 25px #ff944d; box-shadow: 0 0 25px #ff0000; }
             100% { text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 -5px 15px #ff944d; box-shadow: 0 0 15px #ff4d4d; }
         }
-
-        /* VOID KARANLIK EFEKTİ */
         @keyframes voidAnim {
             0% { box-shadow: 0 0 15px #2D0054, inset 0 0 10px #000; border-color: #1a0033; filter: brightness(0.8); }
             50% { box-shadow: 0 0 35px #6A00B0, inset 0 0 20px #000; border-color: #4B0082; filter: brightness(1.2); }
             100% { box-shadow: 0 0 15px #2D0054, inset 0 0 10px #000; border-color: #1a0033; filter: brightness(0.8); }
         }
+        @keyframes megaChadAnim {
+            0%   { box-shadow: 0 0 20px #FFD700, inset 0 0 10px #b8860b; border-color: #FFD700; filter: brightness(1); }
+            50%  { box-shadow: 0 0 45px #FFD700, inset 0 0 25px #FFD700; border-color: #fff176; filter: brightness(1.4); }
+            100% { box-shadow: 0 0 20px #FFD700, inset 0 0 10px #b8860b; border-color: #FFD700; filter: brightness(1); }
+        }
+        @keyframes filAnim {
+            0%   { box-shadow: 0 0 20px #00BCD4, inset 0 0 10px #006064; border-color: #00BCD4; filter: brightness(0.9); }
+            50%  { box-shadow: 0 0 50px #00E5FF, inset 0 0 25px #00BCD4; border-color: #80DEEA; filter: brightness(1.3); }
+            100% { box-shadow: 0 0 20px #00BCD4, inset 0 0 10px #006064; border-color: #00BCD4; filter: brightness(0.9); }
+        }
+        @keyframes poloAnim {
+            0%   { box-shadow: 0 0 20px #FF6F00, inset 0 0 10px #E65100; border-color: #FF6F00; filter: hue-rotate(0deg) brightness(1); }
+            50%  { box-shadow: 0 0 50px #FFAB40, inset 0 0 25px #FF6F00; border-color: #FFD180; filter: hue-rotate(15deg) brightness(1.4); }
+            100% { box-shadow: 0 0 20px #FF6F00, inset 0 0 10px #E65100; border-color: #FF6F00; filter: hue-rotate(0deg) brightness(1); }
+        }
+        @keyframes engellAnim {
+            0%   { box-shadow: 0 0 20px #F44336, inset 0 0 10px #B71C1C; border-color: #F44336; filter: brightness(1); }
+            33%  { box-shadow: 0 0 40px #FF9800, inset 0 0 20px #E65100; border-color: #FF9800; filter: brightness(1.2); }
+            66%  { box-shadow: 0 0 40px #4CAF50, inset 0 0 20px #1B5E20; border-color: #4CAF50; filter: brightness(1.2); }
+            100% { box-shadow: 0 0 20px #F44336, inset 0 0 10px #B71C1C; border-color: #F44336; filter: brightness(1); }
+        }
+        @keyframes kozmikAnim {
+            0%   { box-shadow: 0 0 25px #E040FB, inset 0 0 15px #4A148C; border-color: #E040FB; filter: hue-rotate(0deg) brightness(1); }
+            25%  { box-shadow: 0 0 50px #40C4FF, inset 0 0 25px #01579B; border-color: #40C4FF; filter: hue-rotate(90deg) brightness(1.3); }
+            50%  { box-shadow: 0 0 50px #69F0AE, inset 0 0 25px #1B5E20; border-color: #69F0AE; filter: hue-rotate(180deg) brightness(1.3); }
+            75%  { box-shadow: 0 0 50px #FF6E40, inset 0 0 25px #BF360C; border-color: #FF6E40; filter: hue-rotate(270deg) brightness(1.3); }
+            100% { box-shadow: 0 0 25px #E040FB, inset 0 0 15px #4A148C; border-color: #E040FB; filter: hue-rotate(360deg) brightness(1); }
+        }
 
-        .rank-eqo-fx { animation: fire 1.5s infinite ease-in-out !important; border: 2px solid #ff4d4d !important; background: linear-gradient(45deg, #800000, #ff4d4d) !important; }
+        @keyframes recordPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255,215,0,0.5); }
+            50% { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,215,0,0.8); }
+        }
+
+        .rank-eqo-fx     { animation: fire 1.5s infinite ease-in-out !important; border: 2px solid #ff4d4d !important; background: linear-gradient(45deg, #800000, #ff4d4d) !important; }
         .rank-sengolo-fx { animation: voidAnim 2s infinite ease-in-out !important; border: 3px solid #4B0082 !important; background: linear-gradient(45deg, #000, #1a0033, #000) !important; color: #fff !important; }
+        .rank-megachad-fx { animation: megaChadAnim 1.8s infinite ease-in-out !important; border: 3px solid #FFD700 !important; background: linear-gradient(45deg, #3d2b00, #7a5500, #3d2b00) !important; color: #FFD700 !important; }
+        .rank-fil-fx      { animation: filAnim 2s infinite ease-in-out !important; border: 3px solid #00BCD4 !important; background: linear-gradient(45deg, #001a1f, #003d47, #001a1f) !important; color: #80DEEA !important; }
+        .rank-polo-fx     { animation: poloAnim 1.6s infinite ease-in-out !important; border: 3px solid #FF6F00 !important; background: linear-gradient(45deg, #2a1000, #6b2d00, #2a1000) !important; color: #FFAB40 !important; }
+        .rank-engell-fx   { animation: engellAnim 2.5s infinite ease-in-out !important; border: 3px solid #F44336 !important; background: linear-gradient(45deg, #1a0000, #3a0a0a, #1a0000) !important; color: #fff !important; }
+        .rank-kozmik-fx   { animation: kozmikAnim 3s infinite linear !important; border: 3px solid #E040FB !important; background: linear-gradient(45deg, #0a001a, #1a0033, #001a0a, #0a001a) !important; color: #fff !important; }
 
         @keyframes rankUpAnim {
             0% { transform: scale(0.3) rotate(-20deg); opacity: 0; }
@@ -64,14 +100,24 @@
 
         .rank-up-overlay {
             position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; background: rgba(0,0,0,0.7);
-            pointer-events: none; opacity: 0; transition: opacity 0.5s;
+            justify-content: center; align-items: center;
+            pointer-events: none; opacity: 0; transition: opacity 0.4s;
+        }
+        .rank-up-bg {
+            position: absolute; inset: 0; opacity: 0.85;
         }
         .rank-up-card {
-            background: linear-gradient(135deg, #FFD700, #DAA520); padding: 30px;
-            border-radius: 40px; border: 10px solid #fff; box-shadow: 0 0 50px rgba(255,215,0,0.5);
-            text-align: center; color: #131E3D; animation: rankUpAnim 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; z-index: 1;
+            padding: 28px 32px; border-radius: 28px; text-align: center;
+            transform: scale(0.5); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 260px;
         }
+        .rank-up-overlay.show { opacity: 1; }
+        .rank-up-overlay.show .rank-up-card { transform: scale(1); }
+        .rank-up-label { font-size: 13px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; opacity: 0.8; margin-bottom: 6px; }
+        .rank-up-name { font-size: 30px; font-weight: 900; margin: 8px 0; line-height: 1.1; }
+        .rank-up-img { width: 100px; height: 100px; border-radius: 16px; object-fit: cover; margin: 12px auto; display: block; border: 3px solid rgba(255,255,255,0.4); }
+        .rank-up-msg { font-size: 14px; font-weight: 700; opacity: 0.9; margin-top: 8px; }
 
         .confetti { position: absolute; width: 10px; height: 10px; z-index: 10000; pointer-events: none; }
 
@@ -90,15 +136,20 @@
         .super { color: var(--text-gold); font-size: 42px; text-shadow: 0 0 25px rgba(0,0,0,0.8), 0 4px 0 #b8860b; }
         .ultra { color: #fff; font-size: 48px; text-shadow: 0 0 35px #ff0000, 0 5px 0 #8b0000; letter-spacing: 1px; }
 
-        .will-explode { filter: brightness(1.6) saturate(1.4); box-shadow: 0 0 15px #fff !important; z-index: 5; transform: scale(0.96); }
+        .will-explode { filter: brightness(1.8) saturate(1.6); box-shadow: 0 0 20px rgba(255,255,255,0.9), 0 0 40px rgba(255,255,255,0.4) !important; z-index: 5; transform: scale(0.93); transition: all 0.1s !important; }
         .cell.game-over-gray { filter: grayscale(1) brightness(0.4) !important; transition: filter 2s ease, brightness 2s ease !important; }
 
         .game-wrapper {
-            background: var(--bg-game); width: 100%; max-width: 400px; height: 100vh;
+            background: var(--bg-game); width: 100%; max-width: 400px;
+            height: 100vh;
+            height: 100dvh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            box-sizing: border-box;
             display: flex; flex-direction: column; align-items: center; position: relative;
         }
 
-        #header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 50px 20px 5px 20px; box-sizing: border-box; }
+        #header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px 5px 20px; box-sizing: border-box; }
         .high-score-box { display: flex; align-items: center; color: var(--text-gold); font-size: 24px; font-weight: bold; }
         .header-icons { display: flex; gap: 15px; align-items: center; }
 
@@ -112,40 +163,136 @@
         .rank-btn-icon img { width: 100%; height: 100%; object-fit: cover; }
         .settings-icon { font-size: 32px; color: #fff; cursor: pointer; }
 
-        #score { font-size: 75px; font-weight: 900; color: white; margin: 15px 0; letter-spacing: -2px; }
+        #score { font-size: 65px; font-weight: 900; color: white; margin: 8px 0; letter-spacing: -2px; }
 
         #game-container { background: var(--bg-grid); padding: 8px; border-radius: 12px; border: 4px solid #1a2a5a; position: relative; }
         #grid { display: grid; grid-template-columns: repeat(8, var(--cell)); grid-template-rows: repeat(8, var(--cell)); gap: var(--gap); }
         .cell { width: var(--cell); height: var(--cell); background: var(--bg-cell); border-radius: var(--radius); transition: background 0.2s, filter 0.2s; position: relative; }
-        .filled { border-radius: var(--radius); box-shadow: inset 0 3px 0 rgba(255,255,255,0.3); }
+        .filled {
+            border-radius: var(--radius);
+            box-shadow:
+                inset 0 5px 0 rgba(255,255,255,0.55),
+                inset 0 -5px 0 rgba(0,0,0,0.45),
+                inset 5px 0 0 rgba(255,255,255,0.20),
+                inset -5px 0 0 rgba(0,0,0,0.30),
+                0 2px 8px rgba(0,0,0,0.4);
+        }
 
-        #dock { margin-top: 40px; display: flex; gap: 15px; height: 120px; align-items: center; }
+        #dock { margin-top: 16px; display: flex; gap: 15px; height: 120px; align-items: center; }
         .slot { width: 105px; height: 105px; display: flex; justify-content: center; align-items: center; }
-        .piece { display: grid; gap: 2px; transition: transform 0.1s; }
-        .p-cell { width: 16px; height: 16px; border-radius: 3px; }
-        .dragging { position: fixed !important; z-index: 1000; transform: translateY(-100px) scale(1.5) !important; pointer-events: none; }
-        .preview { opacity: 0.3 !important; }
+        .piece { display: grid; gap: 2px; }
+        .p-cell { width: 16px; height: 16px; border-radius: 4px; }
+        .p-cell.filled {
+            box-shadow:
+                inset 0 3px 0 rgba(255,255,255,0.55),
+                inset 0 -3px 0 rgba(0,0,0,0.40),
+                inset 3px 0 0 rgba(255,255,255,0.20),
+                inset -3px 0 0 rgba(0,0,0,0.25),
+                0 2px 5px rgba(0,0,0,0.35);
+        }
+
+        .dragging { position: fixed !important; z-index: 1000; pointer-events: none; transition: none !important; will-change: left, top; }
+        .preview { opacity: 0.35 !important; }
 
         .overlay { position: fixed; inset: 0; background: rgba(19, 30, 61, 0.95); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
         .modal-card { background: #243b7a; padding: 25px; border-radius: 30px; text-align: center; border: 5px solid #4A76FD; width: 85%; max-width: 340px; max-height: 80vh; overflow-y: auto; }
 
-        .rank-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); margin: 8px 0; padding: 12px; border-radius: 15px; border: 1px solid transparent; }
-        .rank-item.active { border-color: var(--text-gold); background: rgba(255,215,0,0.15); }
-        .rank-icon-placeholder { width: 50px; height: 50px; background: #131E3D; border-radius: 10px; margin-right: 12px; overflow: hidden; }
+        .rank-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); margin: 6px 0; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s; }
+        .rank-item.active { border-color: var(--text-gold); background: rgba(255,215,0,0.12); box-shadow: 0 0 16px rgba(255,215,0,0.15); }
+        .rank-icon-placeholder { width: 44px; height: 44px; background: #131E3D; border-radius: 10px; margin-right: 10px; overflow: hidden; flex-shrink:0; }
         .rank-icon-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+        .rank-info { flex: 1; min-width: 0; }
+        .rank-name { display: block; font-weight: 900; font-size: 13px; letter-spacing: 0.5px; }
+        .rank-score { display: block; font-size: 10px; color: rgba(255,255,255,0.4); margin: 2px 0 5px; }
+        .rank-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .rank-bar-fill { height: 100%; border-radius: 4px; width: 100%; }
+        .rank-crown { font-size: 18px; margin-left: 8px; flex-shrink: 0; }
 
-        .btn { width: 100%; padding: 16px 0; font-size: 20px; font-weight: bold; border-radius: 15px; border: none; background: linear-gradient(to bottom, #FFD700, #DAA520); color: #131E3D; margin: 10px 0; cursor: pointer; box-shadow: 0 6px 0 #9e7b00; text-transform: uppercase; }
+        .btn { width: 100%; padding: 16px 0; font-size: 20px; font-weight: bold; border-radius: 15px; border: none; background: linear-gradient(to bottom, #FFD700, #DAA520); color: #131E3D; margin: 10px 0; cursor: pointer; box-shadow: 0 6px 0 #9e7b00; text-transform: uppercase; transition: transform 0.08s, box-shadow 0.08s; }
+        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #9e7b00; }
+
+        /* Ayarlar menüsü */
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .setting-label { display: flex; align-items: center; gap: 10px; color: white; font-size: 16px; font-weight: bold; }
+        .setting-icon { font-size: 20px; }
+        .toggle-switch { position: relative; width: 52px; height: 28px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; inset: 0; background: rgba(255,255,255,0.2); border-radius: 28px; cursor: pointer; transition: background 0.3s; }
+        .toggle-slider:before { content: ''; position: absolute; width: 22px; height: 22px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .toggle-switch input:checked + .toggle-slider { background: #00E676; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+        .btn-menu-primary { width: 80px; height: 80px; padding: 0; font-size: 36px; font-weight: bold; border-radius: 8px; border: none; background: linear-gradient(160deg, #00E676, #00C853); color: #fff; cursor: pointer; box-shadow: 0 6px 0 #007B33, 0 0 30px rgba(0,230,118,0.4); display: flex; align-items: center; justify-content: center; margin: 0 auto; text-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.08s, box-shadow 0.08s; }
+        .btn-menu-primary:active { transform: translateY(5px) scale(0.95); box-shadow: 0 1px 0 #007B33, 0 0 10px rgba(0,230,118,0.2); }
+        .btn-menu-secondary { width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 12px; border: none; background: rgba(255,255,255,0.1); color: white; margin: 10px 0 0; cursor: pointer; text-align: center; letter-spacing: 0.5px; transition: transform 0.08s, background 0.08s; }
+        .btn-menu-secondary:active { transform: scale(0.97); background: rgba(255,255,255,0.18); }
+
+        /* Ana menü */
+        .main-menu-card {
+            position: relative; overflow-y: auto; overflow-x: hidden;
+            background: linear-gradient(160deg, #0f1b4d 0%, #1a2f7a 40%, #0d1a45 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 28px; padding: 28px 22px 24px;
+            width: 88%; max-width: 340px; max-height: 88vh;
+            box-shadow: 0 0 60px rgba(74,118,253,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+        .menu-bg-dots {
+            position: absolute; inset: 0; border-radius: 28px; overflow: hidden; pointer-events: none;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+        .menu-logo-wrap { text-align: center; margin-bottom: 22px; position: relative; }
+        .menu-logo { width: 130px; filter: drop-shadow(0 6px 20px rgba(74,118,253,0.6)); animation: logoFloat 3s ease-in-out infinite; }
+        @keyframes logoFloat {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .menu-subtitle { font-size: 11px; letter-spacing: 4px; color: rgba(255,255,255,0.35); margin-top: 6px; text-transform: uppercase; }
+
+        /* Bilmen gerekenler */
+        .info-section { margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; }
+        .info-title { font-size: 12px; font-weight: 900; letter-spacing: 2px; color: #FFD700; margin-bottom: 12px; text-align: center; }
+        .info-list { display: flex; flex-direction: column; gap: 10px; }
+        .info-item { display: flex; align-items: flex-start; gap: 10px; background: rgba(255,255,255,0.04); border-radius: 12px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.06); }
+        .info-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .info-item span:last-child { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+        .info-item b { color: #FFD700; }
+        .btn-setting { width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 12px; border: none; background: rgba(255,255,255,0.1); color: white; margin: 5px 0; cursor: pointer; text-align: left; letter-spacing: 0.5px; transition: transform 0.08s, background 0.08s; }
+        .btn-setting:active { transform: scale(0.97); background: rgba(255,255,255,0.2); }
+        .btn-setting-close { width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 12px; border: none; background: rgba(255,77,77,0.25); color: #ff8080; margin: 5px 0; cursor: pointer; text-align: left; letter-spacing: 0.5px; transition: transform 0.08s, background 0.08s; }
+        .btn-setting-close:active { transform: scale(0.97); background: rgba(255,77,77,0.4); }
         .hidden { display: none !important; }
 
         .particle { position: absolute; pointer-events: none; z-index: 2000; border-radius: 2px; }
 
-        #new-record-alert { color: var(--text-gold); font-size: 24px; font-weight: 900; text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); margin-bottom: 10px; animation: fire 1s infinite; }
+        #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(20,20,40,0.95); color: #fff; padding: 12px 24px; border-radius: 20px; font-size: 15px; font-weight: bold; z-index: 99999; border: 2px solid #ff4d4d; display: none; text-align: center; white-space: nowrap; }
 
-        /* RENKLER */
-        .c-1 { background: #FF6B00; } .c-2 { background: #22C55E; } .c-3 { background: #A855F7; }
-        .c-4 { background: #EAB308; } .c-5 { background: #3B82F6; } .c-6 { background: #06B6D4; }
-        .c-7 { background: #F43F5E; } .c-8 { background: #FF9FF3; } .c-9 { background: #54a0ff; }
-        .c-10 { background: #1dd1a1; } .c-11 { background: #ff9f43; } .c-12 { background: #5f27cd; }
+        #revive-section { margin: 10px 0; }
+        #countdown-ring { position: relative; width: 80px; height: 80px; margin: 0 auto 10px; }
+        #countdown-ring svg { transform: rotate(-90deg); }
+        #countdown-ring circle.bg { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 6; }
+        #countdown-ring circle.progress { fill: none; stroke: #FFD700; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 220; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+        #countdown-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #FFD700; }
+        .btn-revive { width: 100%; padding: 16px 0; font-size: 18px; font-weight: bold; border-radius: 15px; border: none; background: linear-gradient(to bottom, #00E676, #00C853); color: #fff; margin: 6px 0; cursor: pointer; box-shadow: 0 6px 0 #007B33; text-transform: uppercase; transition: transform 0.08s, box-shadow 0.08s; }
+        .btn-revive:active { transform: translateY(4px); box-shadow: 0 2px 0 #007B33; }
+
+        .c-1  { background: linear-gradient(145deg, #FF6B35, #C1360A); }
+        .c-2  { background: linear-gradient(145deg, #4CAF50, #1B5E20); }
+        .c-3  { background: linear-gradient(145deg, #E040FB, #6A00C8); }
+        .c-4  { background: linear-gradient(145deg, #FFEB3B, #F57F17); }
+        .c-5  { background: linear-gradient(145deg, #42A5F5, #0D47A1); }
+        .c-6  { background: linear-gradient(145deg, #26C6DA, #00600F); }
+        .c-7  { background: linear-gradient(145deg, #EF5350, #7F0000); }
+        .c-8  { background: linear-gradient(145deg, #EC407A, #880E4F); }
+        .c-9  { background: linear-gradient(145deg, #5C6BC0, #1A237E); }
+        .c-10 { background: linear-gradient(145deg, #00E676, #00600F); }
+        .c-11 { background: linear-gradient(145deg, #FFA726, #BF360C); }
+        .c-12 { background: linear-gradient(145deg, #7C4DFF, #311B92); }
+        .c-13 { background: linear-gradient(145deg, #FF7043, #BF360C); }
+        .c-14 { background: linear-gradient(145deg, #66BB6A, #1B5E20); }
+        .c-15 { background: linear-gradient(145deg, #29B6F6, #01579B); }
+        .c-16 { background: linear-gradient(145deg, #CE93D8, #4A148C); }
+        .c-17 { background: linear-gradient(145deg, #F06292, #880E4F); }
+        .c-18 { background: linear-gradient(145deg, #FFD740, #E65100); }
     </style>
 </head>
 <body>
@@ -155,85 +302,328 @@
 <audio id="bg-music" src="50.mp3" loop preload="auto"></audio>
 
 <div id="rank-up-popup" class="rank-up-overlay">
-    <div class="rank-up-card">
-        <h3 style="margin:0; font-size:18px; text-transform:uppercase;">RÜTBE ATLADIN!</h3>
-        <h1 id="pop-rank-name" style="margin:10px 0; font-size:32px;">ŞENGOLO</h1>
-        <div style="width:120px; height:120px; background:#fff; border-radius:20px; margin:15px auto; overflow:hidden;">
-            <img id="pop-rank-img" src="" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <p style="font-weight:bold; margin:0;">SEN BİR EFSANESİN!</p>
+    <div class="rank-up-bg" id="pop-bg"></div>
+    <div class="rank-up-card" id="pop-card">
+        <div class="rank-up-label" id="pop-label">RÜTBE ATLADIN!</div>
+        <div class="rank-up-name" id="pop-rank-name">ŞENGOLO</div>
+        <img class="rank-up-img" id="pop-rank-img" src="">
+        <div class="rank-up-msg" id="pop-msg">SEN BİR EFSANESİN!</div>
     </div>
 </div>
 
 <div class="game-wrapper" id="main-wrapper">
     <div id="main-menu" class="overlay">
-        <div class="modal-card">
-            <img src="logo.png" alt="Logo" style="width:180px; margin-bottom:30px;">
-            <button class="btn" onclick="startGame()">OYUNA BAŞLA</button>
-            <button class="btn" style="background:#fff;" onclick="showSettings()">AYARLAR</button>
+        <div class="main-menu-card">
+            <!-- Animasyonlu arka plan partikülleri -->
+            <div class="menu-bg-dots"></div>
+
+            <!-- Logo + başlık -->
+            <div class="menu-logo-wrap">
+                <img src="logo.png" alt="Logo" class="menu-logo">
+                <div class="menu-subtitle">BLOCK PUZZLE</div>
+            </div>
+
+            <!-- Oyuna başla butonu -->
+            <button class="btn-menu-primary" onclick="startGame()">▶</button>
+
+            <!-- Ayarlar -->
+            <button class="btn-menu-secondary" onclick="showSettings()">⚙️ &nbsp;Ayarlar</button>
+
+            <!-- Bilmen gerekenler -->
+            <div class="info-section">
+                <div class="info-title">📖 BİLMEN GEREKENLER</div>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-icon">📈</span>
+                        <span>Her yeni rütbede bloklar büyür, tahta daha hızlı dolar — zorluk artar!</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🔥</span>
+                        <span>Ard arda sıra kır: <b>DOMBİK 2x, 3x...</b> Seri puanı katlar!</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">⚡</span>
+                        <span>Aynı anda 2 sıra = <b>SÜPER DOMBİK x3</b>, 3+ sıra = <b>ULTRA DOMBİK x5</b></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📺</span>
+                        <span>Her oyunda <b>3 canlanma hakkın</b> var. İnternet olmadan reklam izleyemezsin.</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">👑</span>
+                        <span>En yüksek rekorunu kır, <b>KOZMİK UĞUR BÖCEĞİ</b>'ne ulaş!</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <div id="settings-menu" class="overlay hidden">
-        <div class="modal-card">
-            <h2 style="color:white;">AYARLAR</h2>
-            <button id="vib-toggle-btn" class="btn" onclick="toggleVibration()">TİTREŞİM: AÇIK</button>
-            <button id="music-toggle-btn" class="btn" onclick="toggleMusic()">MÜZİK: KAPALI</button>
-            <button class="btn" onclick="resetGame()">BAŞTAN BAŞLA</button>
-            <button class="btn" onclick="backToMenu()">ANA MENÜ</button>
-            <button class="btn" style="background:#ff4d4d; color:white;" onclick="hideSettings()">KAPAT</button>
+        <div class="modal-card" style="padding:20px;">
+            <h2 style="color:white; margin:0 0 20px 0; font-size:20px; letter-spacing:1px;">⚙️ AYARLAR</h2>
+
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="setting-icon">🔊</span>
+                    <span>Ses Efektleri</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="vib-toggle-btn" onchange="toggleVibration()" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="setting-icon">📳</span>
+                    <span>Titreşim</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="haptic-toggle-btn" onchange="toggleHaptic()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="setting-icon">🎵</span>
+                    <span>Müzik</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="music-toggle-btn" onchange="toggleMusic()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div style="height:1px; background:rgba(255,255,255,0.1); margin:16px 0;"></div>
+
+            <button class="btn-setting" onclick="resetGame()">🔄 Baştan Başla</button>
+            <button class="btn-setting" onclick="backToMenu()">🏠 Ana Menü</button>
+            <button class="btn-setting-close" onclick="hideSettings()">✕ Kapat</button>
         </div>
     </div>
 
     <div id="rank-panel" class="overlay hidden">
-        <div class="modal-card">
-            <h2 style="color:var(--text-gold);">RÜTBELER</h2>
+        <div class="modal-card" style="padding:20px;">
+            <div style="text-align:center; margin-bottom:16px;">
+                <div style="font-size:26px; font-weight:900; color:var(--text-gold); letter-spacing:1px;">🏆 RÜTBELER</div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">Ne kadar yüksek çıkabilirsin?</div>
+            </div>
             <div id="rank-list">
                 <div class="rank-item" id="rank-100000">
-                    <div class="rank-icon-placeholder"><img src="sengolo.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; color:#A855F7; display:block;">ŞENGOLO</span><span style="font-size:11px; color:#aaa;">100.000+ Rekor</span></div>
+                    <div class="rank-icon-placeholder"><img src="kozmik.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#E040FB;">KOZMİK UĞUR BÖCEĞİ</span>
+                        <span class="rank-score">100.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-100000" class="rank-bar-fill" style="background:linear-gradient(90deg,#E040FB,#40C4FF,#69F0AE);"></div></div>
+                    </div>
+                    <div class="rank-crown">🐞</div>
+                </div>
+                <div class="rank-item" id="rank-70000">
+                    <div class="rank-icon-placeholder"><img src="engelli.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#FF5252;">ENGELLİ HUNTER 55</span>
+                        <span class="rank-score">70.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-70000" class="rank-bar-fill" style="background:linear-gradient(90deg,#F44336,#FF9800,#4CAF50);"></div></div>
+                    </div>
+                    <div class="rank-crown">🎯</div>
                 </div>
                 <div class="rank-item" id="rank-50000">
-                    <div class="rank-icon-placeholder"><img src="eko.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; color:#ff4d4d; display:block;">!EKO!</span><span style="font-size:11px; color:#aaa;">50.000+ Rekor</span></div>
+                    <div class="rank-icon-placeholder"><img src="memo.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#FFAB40;">KAYIP BALIK MEMO</span>
+                        <span class="rank-score">50.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-50000" class="rank-bar-fill" style="background:linear-gradient(90deg,#FF6F00,#FFAB40);"></div></div>
+                    </div>
+                    <div class="rank-crown">🐟</div>
+                </div>
+                <div class="rank-item" id="rank-35000">
+                    <div class="rank-icon-placeholder"><img src="fil.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#80DEEA;">FİL</span>
+                        <span class="rank-score">35.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-35000" class="rank-bar-fill" style="background:linear-gradient(90deg,#00BCD4,#80DEEA);"></div></div>
+                    </div>
+                    <div class="rank-crown">🐘</div>
+                </div>
+                <div class="rank-item" id="rank-25000">
+                    <div class="rank-icon-placeholder"><img src="megachad.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#FFD700;">MEGA CHAD</span>
+                        <span class="rank-score">25.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-25000" class="rank-bar-fill" style="background:linear-gradient(90deg,#FFD700,#fff176);"></div></div>
+                    </div>
+                    <div class="rank-crown">💪</div>
                 </div>
                 <div class="rank-item" id="rank-20000">
+                    <div class="rank-icon-placeholder"><img src="sengolo.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#A855F7;">ŞENGOLO</span>
+                        <span class="rank-score">20.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-20000" class="rank-bar-fill" style="background:linear-gradient(90deg,#A855F7,#7C3AED);"></div></div>
+                    </div>
+                    <div class="rank-crown">👑</div>
+                </div>
+                <div class="rank-item" id="rank-12000">
+                    <div class="rank-icon-placeholder"><img src="eko.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#ff4d4d;">!EKO!</span>
+                        <span class="rank-score">12.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-12000" class="rank-bar-fill" style="background:linear-gradient(90deg,#ff4d4d,#b91c1c);"></div></div>
+                    </div>
+                    <div class="rank-crown">🔥</div>
+                </div>
+                <div class="rank-item" id="rank-8000">
                     <div class="rank-icon-placeholder"><img src="ibo.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">İBO!!</span><span style="font-size:11px; color:#aaa;">20.000+ Rekor</span></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#60a5fa;">İBO!!</span>
+                        <span class="rank-score">8.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-8000" class="rank-bar-fill" style="background:linear-gradient(90deg,#3b82f6,#1d4ed8);"></div></div>
+                    </div>
+                    <div class="rank-crown">⚡</div>
                 </div>
-                <div class="rank-item" id="rank-10000">
+                <div class="rank-item" id="rank-5000">
                     <div class="rank-icon-placeholder"><img src="sekko.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">RİDER 125</span><span style="font-size:11px; color:#aaa;">100.000+ Rekor</span></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#34d399;">RİDER 125</span>
+                        <span class="rank-score">5.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-5000" class="rank-bar-fill" style="background:linear-gradient(90deg,#10b981,#065f46);"></div></div>
+                    </div>
+                    <div class="rank-crown">🏍️</div>
                 </div>
-                <div class="rank-item" id="rank-6000">
+                <div class="rank-item" id="rank-3000">
                     <div class="rank-icon-placeholder"><img src="feribot.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">FERİ-BOT</span><span style="font-size:11px; color:#aaa;">6000+ Rekor</span></div>
-                </div>
-                <div class="rank-item" id="rank-4000">
-                    <div class="rank-icon-placeholder"><img src="TVS.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">SEDO TVS</span><span style="font-size:11px; color:#aaa;">4000+ Rekor</span></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#fbbf24;">FERİ-BOT</span>
+                        <span class="rank-score">3.000+ Puan</span>
+                        <div class="rank-bar"><div id="bar-3000" class="rank-bar-fill" style="background:linear-gradient(90deg,#f59e0b,#b45309);"></div></div>
+                    </div>
+                    <div class="rank-crown">⛴️</div>
                 </div>
                 <div class="rank-item" id="rank-1500">
+                    <div class="rank-icon-placeholder"><img src="TVS.png"></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#f472b6;">SEDO TVS</span>
+                        <span class="rank-score">1.500+ Puan</span>
+                        <div class="rank-bar"><div id="bar-1500" class="rank-bar-fill" style="background:linear-gradient(90deg,#ec4899,#9d174d);"></div></div>
+                    </div>
+                    <div class="rank-crown">🛵</div>
+                </div>
+                <div class="rank-item" id="rank-500">
                     <div class="rank-icon-placeholder"><img src="vakko.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">VAKKO</span><span style="font-size:11px; color:#aaa;">1500+ Rekor</span></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:#a3e635;">VAKKO</span>
+                        <span class="rank-score">500+ Puan</span>
+                        <div class="rank-bar"><div id="bar-500" class="rank-bar-fill" style="background:linear-gradient(90deg,#84cc16,#3f6212);"></div></div>
+                    </div>
+                    <div class="rank-crown">🌿</div>
                 </div>
                 <div class="rank-item" id="rank-0">
                     <div class="rank-icon-placeholder"><img src="dürümbüs_memo.png"></div>
-                    <div class="rank-info" style="text-align:left;"><span style="font-weight:bold; display:block;">Dürümbüs Memo</span><span style="font-size:11px; color:#aaa;">0+ Rekor</span></div>
+                    <div class="rank-info">
+                        <span class="rank-name" style="color:rgba(255,255,255,0.6);">Dürümbüs Memo</span>
+                        <span class="rank-score">Başlangıç</span>
+                        <div class="rank-bar"><div id="bar-0" class="rank-bar-fill" style="background:rgba(255,255,255,0.3);"></div></div>
+                    </div>
+                    <div class="rank-crown">🌱</div>
                 </div>
             </div>
-            <button class="btn" style="margin-top:20px;" onclick="hideRankPanel()">KAPAT</button>
+            <button class="btn-setting-close" style="margin-top:12px;" onclick="hideRankPanel()">✕ Kapat</button>
         </div>
     </div>
 
-    <div id="game-over" class="overlay hidden">
-        <div class="modal-card" style="border-color: #ff4d4d;">
-            <div id="new-record-alert" class="hidden">👑 YENİ REKOR! 👑</div>
-            <h1 style="color:#ff4d4d; margin:0;">OYUN BİTTİ</h1>
-            <p style="color:white; margin:10px 0;">SKORUN</p>
-            <h2 id="final-score" style="font-size:60px; margin:10px 0; color:var(--text-gold);">0</h2>
-            <button class="btn" onclick="resetGame()">TEKRAR DENE</button>
-            <button class="btn" style="background:#fff;" onclick="backToMenu()">ANA MENÜ</button>
+    <div id="toast"></div>
+    <div id="game-over" class="overlay hidden" style="background:rgba(5,0,20,0.92); backdrop-filter:blur(12px);">
+        <div style="
+            position:relative; width:88%; max-width:340px;
+            background: linear-gradient(160deg, #0f0020 0%, #1a0035 50%, #0a0018 100%);
+            border-radius: 32px;
+            border: 2px solid rgba(255,77,77,0.5);
+            box-shadow: 0 0 60px rgba(255,50,50,0.25), 0 0 120px rgba(180,0,255,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
+            padding: 28px 24px 24px;
+            text-align: center;
+            overflow: hidden;
+        ">
+            <!-- Arka plan ızgara deseni -->
+            <div style="position:absolute;inset:0;border-radius:32px;background-image:radial-gradient(rgba(255,77,77,0.07) 1px, transparent 1px);background-size:18px 18px;pointer-events:none;"></div>
+
+            <!-- Üst dekor çizgisi -->
+            <div style="position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#ff4d4d,#e040fb,transparent);border-radius:2px;"></div>
+
+            <!-- YENİ REKOR banner -->
+            <div id="new-record-alert" class="hidden" style="
+                position:relative; margin: 0 0 16px;
+                background: linear-gradient(135deg, #b8860b, #FFD700, #b8860b);
+                border-radius: 16px; padding: 10px 16px;
+                font-size: 15px; font-weight: 900; color: #000;
+                letter-spacing: 2px; box-shadow: 0 0 30px rgba(255,215,0,0.5);
+                animation: recordPulse 1s ease-in-out infinite;
+            ">👑 YENİ REKOR! 👑</div>
+
+            <!-- OYUN BİTTİ başlığı -->
+            <div style="position:relative; margin-bottom: 4px;">
+                <div style="font-size:11px; font-weight:900; letter-spacing:5px; color:rgba(255,100,100,0.7); margin-bottom:6px;">● OYUN BİTTİ ●</div>
+                <div style="font-size:42px; font-weight:900; color:#ff4d4d; letter-spacing:2px; text-shadow:0 0 30px rgba(255,77,77,0.8), 0 0 60px rgba(255,77,77,0.3); line-height:1;">💀 GAME<br>OVER</div>
+            </div>
+
+            <!-- Skor kutusu -->
+            <div style="
+                position:relative; margin: 18px 0 16px;
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,215,0,0.2);
+                border-radius: 20px; padding: 14px 20px;
+            ">
+                <div style="font-size:10px; font-weight:900; letter-spacing:4px; color:rgba(255,215,0,0.6); margin-bottom:6px;">SKORUN</div>
+                <div id="final-score" style="font-size:62px; font-weight:900; color:#FFD700; line-height:1; text-shadow:0 0 20px rgba(255,215,0,0.6);">0</div>
+            </div>
+
+            <!-- Canlanma bölümü -->
+            <div id="revive-section" style="margin-bottom:14px;">
+                <div id="revive-lives" style="color:rgba(255,255,255,0.5); font-size:12px; margin-bottom:10px; letter-spacing:1px;"></div>
+                <div id="countdown-ring" style="position:relative; width:70px; height:70px; margin:0 auto 10px;">
+                    <svg width="70" height="70" viewBox="0 0 80 80" style="transform:rotate(-90deg)">
+                        <circle class="bg" cx="40" cy="40" r="35"/>
+                        <circle class="progress" id="countdown-circle" cx="40" cy="40" r="35"/>
+                    </svg>
+                    <div id="countdown-num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#FFD700;">10</div>
+                </div>
+                <button class="btn-revive" id="btn-revive" onclick="reviveGame()" style="
+                    background: linear-gradient(135deg, #00C853, #00E676);
+                    border-radius: 16px; font-size:15px; letter-spacing:1px;
+                    box-shadow: 0 6px 0 #007B33, 0 0 30px rgba(0,230,118,0.3);
+                ">📺 VİDEO İZLE VE CANLAN</button>
+            </div>
+
+            <!-- Alt butonlar -->
+            <button onclick="resetGame()" style="
+                width:100%; padding:15px 0; margin:6px 0;
+                background: linear-gradient(135deg, #ff4d4d, #c0392b);
+                border:none; border-radius:16px; color:#fff;
+                font-size:17px; font-weight:900; letter-spacing:1px; cursor:pointer;
+                box-shadow: 0 6px 0 #7f0000, 0 0 25px rgba(255,77,77,0.3);
+                transition: transform 0.08s, box-shadow 0.08s;
+                font-family: inherit;
+            " onmousedown="this.style.transform='translateY(4px)';this.style.boxShadow='0 2px 0 #7f0000'" onmouseup="this.style.transform='';this.style.boxShadow='0 6px 0 #7f0000, 0 0 25px rgba(255,77,77,0.3)'">🔄 TEKRAR DENE</button>
+
+            <button onclick="backToMenu()" style="
+                width:100%; padding:13px 0; margin:4px 0 0;
+                background: rgba(255,255,255,0.08);
+                border: 1px solid rgba(255,255,255,0.15);
+                border-radius:16px; color:rgba(255,255,255,0.8);
+                font-size:15px; font-weight:700; cursor:pointer;
+                transition: background 0.2s;
+                font-family: inherit;
+            " onmousedown="this.style.background='rgba(255,255,255,0.15)'" onmouseup="this.style.background='rgba(255,255,255,0.08)'">🏠 ANA MENÜ</button>
+
+            <!-- Alt dekor çizgisi -->
+            <div style="position:absolute;bottom:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#e040fb,#ff4d4d,transparent);border-radius:2px;"></div>
+        </div>
+    </div>
+
+    <!-- Video Overlay -->
+    <div id="video-overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:99999; flex-direction:column; justify-content:center; align-items:center;">
+        <div style="position:relative; width:100%; max-width:400px;">
+            <div style="background:rgba(0,0,0,0.7); color:#FFD700; text-align:center; padding:8px; font-size:15px; font-weight:bold; letter-spacing:1px;">📺 DOMBİK REKLAM</div>
+            <video id="ad-video" style="width:100%; display:block;" playsinline webkit-playsinline muted></video>
         </div>
     </div>
 
@@ -275,51 +665,124 @@
     let score = 0;
     let board = Array(8).fill().map(() => Array(8).fill(null));
     let activeDrag = null;
+    let comboStreak = 0; // ard arda sıra kırma sayacı
     let isGameActive = false;
     let isVibrationEnabled = localStorage.getItem('vibrationEnabled') !== 'false';
+    let isHapticEnabled = localStorage.getItem('hapticEnabled') !== 'false';
     let isMusicEnabled = localStorage.getItem('musicEnabled') === 'true';
     let sessionHighScoreReached = false;
     let currentRankThreshold = 0;
 
     const RANK_LEVELS = [
-        {limit: 100000, name: "ŞENGOLO", img: "sengolo.png", id: "rank-100000", fx: "rank-sengolo-fx"},
-        {limit: 50000, name: "EQO", img: "eko.png", id: "rank-50000", fx: "rank-eqo-fx"},
-        {limit: 20000, name: "İBO!!", img: "ibo.png", id: "rank-20000", fx: ""},
-        {limit: 10000, name: "RİDER 125", img: "sekko.png", id: "rank-10000", fx: ""},
-        {limit: 6000, name: "FERİ-BOT", img: "feribot.png", id: "rank-6000", fx: ""},
-        {limit: 4000, name: "SEDO TVS", img: "TVS.png", id: "rank-4000", fx: ""},
-        {limit: 1500, name: "VAKKO", img: "vakko.png", id: "rank-1500", fx: ""},
-        {limit: 0, name: "Dürümbüs Memo", img: "dürümbüs_memo.png", id: "rank-0", fx: ""}
+        {limit: 100000, name: "KOZMİK UĞUR BÖCEĞİ", img: "kozmik.png",   id: "rank-100000", fx: "rank-kozmik-fx"},
+        {limit: 70000,  name: "ENGELLİ HUNTER 55",  img: "engelli.png",  id: "rank-70000",  fx: "rank-engell-fx"},
+        {limit: 50000,  name: "KAYIP BALIK MEMO",    img: "memo.png",     id: "rank-50000",  fx: "rank-polo-fx"},
+        {limit: 35000,  name: "FİL",                 img: "fil.png",      id: "rank-35000",  fx: "rank-fil-fx"},
+        {limit: 25000,  name: "MEGA CHAD",           img: "megachad.png", id: "rank-25000",  fx: "rank-megachad-fx"},
+        {limit: 20000,  name: "ŞENGOLO",             img: "sengolo.png",  id: "rank-20000",  fx: "rank-sengolo-fx"},
+        {limit: 12000,  name: "EQO",                 img: "eko.png",      id: "rank-12000",  fx: "rank-eqo-fx"},
+        {limit: 8000,   name: "İBO!!",               img: "ibo.png",      id: "rank-8000",   fx: ""},
+        {limit: 5000,   name: "RİDER 125",           img: "sekko.png",    id: "rank-5000",   fx: ""},
+        {limit: 3000,   name: "FERİ-BOT",            img: "feribot.png",  id: "rank-3000",   fx: ""},
+        {limit: 1500,   name: "SEDO TVS",            img: "TVS.png",      id: "rank-1500",   fx: ""},
+        {limit: 500,    name: "VAKKO",               img: "vakko.png",    id: "rank-500",    fx: ""},
+        {limit: 0,      name: "Dürümbüs Memo",       img: "dürümbüs_memo.png", id: "rank-0", fx: ""}
     ];
 
+    // ===================== BLOKLAR =====================
+    // ── Block Blast standart blokları + tüm benzersiz rotasyonlar ──
     const SHAPES_SMALL = [
-        {s:[[1,1],[1,1]], c:'c-2', n:'kutu2x2'},
-        {s:[[1,1]], c:'c-4', n:'yatay2'},
-        {s:[[1],[1]], c:'c-4', n:'dikey2'},
-        {s:[[1,1,1]], c:'c-10', n:'yatay3'},
-        {s:[[1,1],[1,0]], c:'c-7', n:'l_kucuk'}
+        // 1 hücre
+        {s:[[1]], c:'c-1', n:'dot'},
+        // 2 hücre — domino
+        {s:[[1,1]], c:'c-2', n:'dom_0'},
+        {s:[[1],[1]], c:'c-3', n:'dom_90'},
+        // 3 hücre — düz
+        {s:[[1,1,1]], c:'c-4', n:'tri_0'},
+        {s:[[1],[1],[1]], c:'c-5', n:'tri_90'},
+        // 3 hücre — köşe (L/J mini) — 4 rotasyon
+        {s:[[1,0],[1,1]], c:'c-6', n:'corner_0'},
+        {s:[[1,1],[1,0]], c:'c-7', n:'corner_90'},
+        {s:[[1,1],[0,1]], c:'c-8', n:'corner_180'},
+        {s:[[0,1],[1,1]], c:'c-9', n:'corner_270'},
+        // 4 hücre — 2×2 kare
+        {s:[[1,1],[1,1]], c:'c-10', n:'sq2'},
+        // 4 hücre — düz
+        {s:[[1,1,1,1]], c:'c-11', n:'quad_0'},
+        {s:[[1],[1],[1],[1]], c:'c-12', n:'quad_90'},
+        // 4 hücre — L küçük — 4 rotasyon
+        {s:[[1,0],[1,0],[1,1]], c:'c-1', n:'L_s_0'},
+        {s:[[1,1,1],[1,0,0]], c:'c-2', n:'L_s_90'},
+        {s:[[1,1],[0,1],[0,1]], c:'c-3', n:'L_s_180'},
+        {s:[[0,0,1],[1,1,1]], c:'c-4', n:'L_s_270'},
+        // 4 hücre — J küçük — 4 rotasyon
+        {s:[[0,1],[0,1],[1,1]], c:'c-5', n:'J_s_0'},
+        {s:[[1,0,0],[1,1,1]], c:'c-6', n:'J_s_90'},
+        {s:[[1,1],[1,0],[1,0]], c:'c-7', n:'J_s_180'},
+        {s:[[1,1,1],[0,0,1]], c:'c-8', n:'J_s_270'},
+        // 4 hücre — T — 4 rotasyon
+        {s:[[1,1,1],[0,1,0]], c:'c-9', n:'T_0'},
+        {s:[[0,1],[1,1],[0,1]], c:'c-10', n:'T_90'},
+        {s:[[0,1,0],[1,1,1]], c:'c-11', n:'T_180'},
+        {s:[[1,0],[1,1],[1,0]], c:'c-12', n:'T_270'},
+        // 4 hücre — S — 2 rotasyon
+        {s:[[0,1,1],[1,1,0]], c:'c-1', n:'S_0'},
+        {s:[[1,0],[1,1],[0,1]], c:'c-2', n:'S_90'},
+        // 4 hücre — Z — 2 rotasyon
+        {s:[[1,1,0],[0,1,1]], c:'c-3', n:'Z_0'},
+        {s:[[0,1],[1,1],[1,0]], c:'c-4', n:'Z_90'},
     ];
 
     const SHAPES_NORMAL = [
-        {s:[[1,1,1],[1,1,1],[1,1,1]], c:'c-3', n:'kutu3x3'},
-        {s:[[1,1,1,1]], c:'c-5', n:'yatay4'}, {s:[[1],[1],[1],[1]], c:'c-5', n:'dikey4'},
-        {s:[[1,1,1],[0,1,0]], c:'c-12', n:'t_blok'},
-        {s:[[1,0],[1,0],[1,1]], c:'c-7', n:'l_buyuk'},
-        {s:[[1,1,0],[0,1,1]], c:'c-1', n:'z_yatay'}, {s:[[0,1],[1,1],[1,0]], c:'c-1', n:'z_dikey'},
-        {s:[[0,1,1],[1,1,0]], c:'c-8', n:'s_yatay'}, {s:[[1,0],[1,1],[0,1]], c:'c-8', n:'s_dikey'}
+        // 6 hücre — 3×2 ve 2×3 dikdörtgen
+        {s:[[1,1,1],[1,1,1]], c:'c-6', n:'rect_3x2'},
+        {s:[[1,1],[1,1],[1,1]], c:'c-11', n:'rect_2x3'},
+        // 9 hücre — 3×3 kare
+        {s:[[1,1,1],[1,1,1],[1,1,1]], c:'c-3', n:'sq3'},
+        // 5 hücre — büyük köşe 3×3 L — 4 rotasyon
+        {s:[[1,0,0],[1,0,0],[1,1,1]], c:'c-2', n:'corner_b_0'},
+        {s:[[1,1,1],[1,0,0],[1,0,0]], c:'c-4', n:'corner_b_90'},
+        {s:[[1,1,1],[0,0,1],[0,0,1]], c:'c-5', n:'corner_b_180'},
+        {s:[[0,0,1],[0,0,1],[1,1,1]], c:'c-12', n:'corner_b_270'},
     ];
 
     function getSavedBest() { return parseInt(localStorage.getItem('blockPuzzleHighScore')) || 0; }
     let best = getSavedBest();
     bestEl.innerText = best;
 
-    function showRankPanel() { document.getElementById('rank-panel').classList.remove('hidden'); }
+    function showRankPanel() {
+        const bestScore = Math.max(score, best);
+        // Rank sıraları (büyükten küçüğe) ve bir üstündeki limit
+        const levels = [100000, 70000, 50000, 35000, 25000, 20000, 12000, 8000, 5000, 3000, 1500, 500, 0];
+        levels.forEach((limit, i) => {
+            const bar = document.getElementById('bar-' + limit);
+            if(!bar) return;
+            const prevLimit = i === 0 ? limit * 2 : levels[i - 1]; // bir üst rank limiti
+            if(bestScore >= prevLimit) {
+                // Bu rankın üstündeki rankı da geçmişiz → bar %100 dolu
+                bar.style.width = '100%';
+            } else if(bestScore >= limit) {
+                // Bu rankın içindeyiz → limitten prevLimit'e ne kadar ilerlediğimiz
+                const pct = ((bestScore - limit) / (prevLimit - limit)) * 100;
+                bar.style.width = Math.min(pct, 100) + '%';
+            } else {
+                // Bu ranka henüz ulaşmadık → boş
+                bar.style.width = '0%';
+            }
+        });
+        document.getElementById('rank-panel').classList.remove('hidden');
+    }
     function hideRankPanel() { document.getElementById('rank-panel').classList.add('hidden'); }
-    function showSettings() { document.getElementById('settings-menu').classList.remove('hidden'); }
+    function showSettings() {
+        document.getElementById('vib-toggle-btn').checked = isVibrationEnabled;
+        document.getElementById('haptic-toggle-btn').checked = isHapticEnabled;
+        document.getElementById('music-toggle-btn').checked = isMusicEnabled;
+        document.getElementById('settings-menu').classList.remove('hidden');
+    }
     function hideSettings() { document.getElementById('settings-menu').classList.add('hidden'); }
 
     function playSfx(audio) {
-        if (!audio) return;
+        if (!audio || !isVibrationEnabled) return;
         audio.currentTime = 0;
         audio.play().catch(e => console.log("Ses çalma hatası:", e));
     }
@@ -331,6 +794,8 @@
     }
 
     function backToMenu() {
+        if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        reviveLives = 3;
         gameOverEl.classList.add('hidden');
         document.getElementById('settings-menu').classList.add('hidden');
         document.getElementById('main-menu').classList.remove('hidden');
@@ -338,39 +803,88 @@
     }
 
     function toggleMusic() {
-        isMusicEnabled = !isMusicEnabled;
+        isMusicEnabled = document.getElementById('music-toggle-btn').checked;
         localStorage.setItem('musicEnabled', isMusicEnabled);
-        document.getElementById('music-toggle-btn').innerText = `MÜZİK: ${isMusicEnabled ? 'AÇIK' : 'KAPALI'}`;
         if(isMusicEnabled) bgMusic.play(); else bgMusic.pause();
     }
 
     function toggleVibration() {
-        isVibrationEnabled = !isVibrationEnabled;
+        isVibrationEnabled = document.getElementById('vib-toggle-btn').checked;
         localStorage.setItem('vibrationEnabled', isVibrationEnabled);
-        document.getElementById('vib-toggle-btn').innerText = `TİTREŞİM: ${isVibrationEnabled ? 'AÇIK' : 'KAPALI'}`;
+        if(isVibrationEnabled && navigator.vibrate) navigator.vibrate(50);
     }
+
+    function toggleHaptic() {
+        isHapticEnabled = document.getElementById('haptic-toggle-btn').checked;
+        localStorage.setItem('hapticEnabled', isHapticEnabled);
+        if(isHapticEnabled && navigator.vibrate) navigator.vibrate(50);
+    }
+
+    // Her ranka özel kutlama teması
+    const RANK_THEMES = {
+        'rank-0':      { bg:'rgba(0,0,0,0.6)',    card:'#1a1a2e',        border:'#555',    color:'#aaa',    msg:'Yolculuk başlıyor...', emoji:'🌱', confettiColors:['#555','#888','#aaa'] },
+        'rank-500':    { bg:'rgba(0,40,0,0.7)',   card:'#1a3a1a',        border:'#a3e635', color:'#a3e635', msg:'İlk adım atıldı!', emoji:'🌿', confettiColors:['#a3e635','#84cc16','#fff'] },
+        'rank-1500':   { bg:'rgba(60,0,40,0.7)',  card:'#2a0a20',        border:'#f472b6', color:'#f472b6', msg:'Motorun ısındı!', emoji:'🛵', confettiColors:['#f472b6','#ec4899','#fff'] },
+        'rank-3000':   { bg:'rgba(40,20,0,0.7)',  card:'#2a1800',        border:'#fbbf24', color:'#fbbf24', msg:'Feribot kalktı!', emoji:'⛴️', confettiColors:['#fbbf24','#f59e0b','#fff'] },
+        'rank-5000':   { bg:'rgba(0,30,20,0.7)',  card:'#001a10',        border:'#34d399', color:'#34d399', msg:'Motoru tam gaz!', emoji:'🏍️', confettiColors:['#34d399','#10b981','#fff'] },
+        'rank-8000':   { bg:'rgba(0,20,50,0.7)',  card:'#000d2e',        border:'#60a5fa', color:'#60a5fa', msg:'Elektrik var!', emoji:'⚡', confettiColors:['#60a5fa','#3b82f6','#fff'] },
+        'rank-12000':  { bg:'rgba(60,0,0,0.75)',  card:'#2a0000',        border:'#ff4d4d', color:'#ff4d4d', msg:'YANIYORSUN!', emoji:'🔥', confettiColors:['#ff4d4d','#ff0000','#ff944d'] },
+        'rank-20000':  { bg:'rgba(10,0,30,0.8)',  card:'#0a0018',        border:'#A855F7', color:'#A855F7', msg:'KARANLIKA HOŞGELDİN!', emoji:'👑', confettiColors:['#A855F7','#7C3AED','#fff'] },
+        'rank-25000':  { bg:'rgba(40,30,0,0.8)',  card:'#1f1500',        border:'#FFD700', color:'#FFD700', msg:'CHAD OLUNDU!', emoji:'💪', confettiColors:['#FFD700','#fff176','#fff','#FFD700'] },
+        'rank-35000':  { bg:'rgba(0,30,40,0.8)',  card:'#001820',        border:'#00E5FF', color:'#80DEEA', msg:'DEVASA GÜÇ!', emoji:'🐘', confettiColors:['#00BCD4','#80DEEA','#fff','#00E5FF'] },
+        'rank-50000':  { bg:'rgba(40,15,0,0.8)',  card:'#200a00',        border:'#FFAB40', color:'#FFAB40', msg:'MEMO KAYBOLDU AMA SEN BULDUN!', emoji:'🐟', confettiColors:['#FF6F00','#FFAB40','#fff'] },
+        'rank-70000':  { bg:'rgba(30,0,0,0.85)',  card:'#150000',        border:'#FF5252', color:'#fff',    msg:'AVLANDIK!', emoji:'🎯', confettiColors:['#F44336','#FF9800','#4CAF50','#fff'] },
+        'rank-100000': { bg:'rgba(10,0,20,0.85)', card:'#050010',        border:'#E040FB', color:'#fff',    msg:'KOZMİK GÜCE ULAŞILDI!', emoji:'🐞', confettiColors:['#E040FB','#40C4FF','#69F0AE','#FF6E40','#fff'] },
+    };
 
     function triggerRankCelebration(rankData) {
-        const pop = document.getElementById('rank-up-popup');
-        document.getElementById('pop-rank-name').innerText = rankData.name;
-        document.getElementById('pop-rank-img').src = rankData.img;
-        pop.style.opacity = '1';
-        createConfetti();
-        if (isVibrationEnabled && navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        setTimeout(() => { pop.style.opacity = '0'; }, 3000);
+        const pop    = document.getElementById('rank-up-popup');
+        const bg     = document.getElementById('pop-bg');
+        const card   = document.getElementById('pop-card');
+        const label  = document.getElementById('pop-label');
+        const name   = document.getElementById('pop-rank-name');
+        const img    = document.getElementById('pop-rank-img');
+        const msg    = document.getElementById('pop-msg');
+
+        const theme = RANK_THEMES[rankData.id] || RANK_THEMES['rank-0'];
+
+        // Tema uygula
+        bg.style.background = theme.bg;
+        card.style.background = theme.card;
+        card.style.border = `4px solid ${theme.border}`;
+        card.style.boxShadow = `0 0 40px ${theme.border}88, 0 0 80px ${theme.border}33`;
+        card.style.color = theme.color;
+        label.style.color = theme.color;
+        name.style.color = theme.color;
+        name.style.textShadow = `0 0 20px ${theme.border}`;
+        name.innerText = theme.emoji + ' ' + rankData.name + ' ' + theme.emoji;
+        img.src = rankData.img;
+        msg.style.color = theme.color;
+        msg.innerText = theme.msg;
+
+        // Göster
+        pop.classList.add('show');
+        createConfetti(theme.confettiColors);
+        if (isHapticEnabled && navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 500]);
+        setTimeout(() => {
+            pop.classList.remove('show');
+        }, 3500);
     }
 
-    function createConfetti() {
-        for(let i=0; i<50; i++) {
+    function createConfetti(colors) {
+        const palette = colors || ['#FFD700', '#FFFFFF', '#FF6B00', '#4A76FD', '#A855F7'];
+        for(let i=0; i<60; i++) {
             const c = document.createElement('div');
             c.className = 'confetti';
-            c.style.backgroundColor = ['#FFD700', '#FFFFFF', '#FF6B00', '#4A76FD', '#A855F7'][Math.floor(Math.random()*5)];
+            const size = 6 + Math.random() * 10;
+            c.style.cssText = `width:${size}px;height:${size}px;border-radius:${Math.random()>0.5?'50%':'2px'};`;
+            c.style.backgroundColor = palette[Math.floor(Math.random() * palette.length)];
             c.style.left = Math.random() * 100 + 'vw';
             c.style.top = '-10px';
             document.body.appendChild(c);
             c.animate([
                 { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
-                { transform: `translate(${(Math.random()-0.5)*200}px, 100vh) rotate(${Math.random()*360}deg)`, opacity: 0 }
+                { transform: `translate(${(Math.random()-0.5)*200}px, 100vh) rotate(${Math.random()*720}deg)`, opacity: 0 }
             ], { duration: 2000 + Math.random()*2000 }).onfinish = () => c.remove();
         }
     }
@@ -379,7 +893,7 @@
         let bestScore = Math.max(score, best);
         let currentRank = RANK_LEVELS.find(r => bestScore >= r.limit);
 
-        headerRankBtn.classList.remove('rank-eqo-fx', 'rank-sengolo-fx');
+        headerRankBtn.classList.remove('rank-eqo-fx', 'rank-sengolo-fx', 'rank-megachad-fx', 'rank-fil-fx', 'rank-polo-fx', 'rank-engell-fx', 'rank-kozmik-fx');
         if (currentRank.fx) headerRankBtn.classList.add(currentRank.fx);
 
         currentRankName.innerText = currentRank.name;
@@ -410,12 +924,50 @@
             if(canFitLarge) break;
         }
 
-        let pool = (!canFitLarge || fillRatio > 0.75) ? SHAPES_SMALL : [...SHAPES_SMALL, ...SHAPES_NORMAL];
+        // Mevcut rütbeye göre zorluk seviyesi (0-12)
+        const bestScore = Math.max(score, best);
+        const rankIndex = RANK_LEVELS.findIndex(r => bestScore >= r.limit);
+        const difficulty = rankIndex; // 0=Memo(kolay) → 12=Kozmik(zor)
+
+        // Rank'a göre doluluk eşiği: yüksek rank = daha erken küçük blok
+        // Memo:%75, Vakko:%70, ..., Kozmik:%40
+        const fillThreshold = Math.max(0.40, 0.75 - difficulty * 0.03);
+
+        // Rank'a göre büyük blok havuzunu ağırlıklandır
+        // Düşük rank: küçük bloklar ağırlıklı, yüksek rank: büyük bloklar ağırlıklı
+        let pool;
+        if(!canFitLarge || fillRatio > fillThreshold) {
+            pool = SHAPES_SMALL;
+        } else {
+            // difficulty arttıkça NORMAL bloğun ağırlığı artar
+            const normalWeight = Math.min(difficulty, 8); // 0-8 arası
+            const normalRepeats = [...Array(normalWeight)].flatMap(() => SHAPES_NORMAL);
+            pool = [...SHAPES_SMALL, ...SHAPES_NORMAL, ...normalRepeats];
+        }
+
+        // Bir şeklin board'a sığıp sığmadığını kontrol et
+        function canFit(shape) {
+            for(let r = 0; r <= 8 - shape.length; r++) {
+                for(let c = 0; c <= 8 - shape[0].length; c++) {
+                    let fit = true;
+                    for(let i = 0; i < shape.length && fit; i++)
+                        for(let j = 0; j < shape[0].length && fit; j++)
+                            if(shape[i][j] && board[r+i][c+j]) fit = false;
+                    if(fit) return true;
+                }
+            }
+            return false;
+        }
+
+        // Sığabilecek blokları filtrele, yoksa tüm pool kullan
+        const fittingPool = pool.filter(s => canFit(s.s));
+        const activePool = fittingPool.length > 0 ? fittingPool : pool;
+
         let currentHandNames = [];
         for(let i=0; i<3; i++) {
             let shapeObj; let attempts = 0;
             do {
-                shapeObj = pool[Math.floor(Math.random() * pool.length)];
+                shapeObj = activePool[Math.floor(Math.random() * activePool.length)];
                 attempts++;
             } while (i > 0 && shapeObj.n === currentHandNames[i-1] && attempts < 20);
 
@@ -430,30 +982,84 @@
                 dc.className = v ? `p-cell filled ${shapeObj.c}` : 'p-cell';
                 piece.appendChild(dc);
             }));
-            piece.onpointerdown = (e) => {
+            piece.addEventListener('pointerdown', (e) => {
                 if(!isGameActive) return;
-                const rect = piece.getBoundingClientRect();
-                activeDrag = { el: piece, shape: shapeObj.s, color: shapeObj.c, ox: rect.width/2, oy: rect.height/2 };
-                piece.classList.add('dragging'); piece.setPointerCapture(e.pointerId);
-            };
+                e.preventDefault();
+                const cell0 = document.getElementById('r0c0');
+                const cell1 = document.getElementById('r0c1');
+                const cellRect0 = cell0.getBoundingClientRect();
+                const cellRect1 = cell1.getBoundingClientRect();
+                const cellSize = cellRect0.width;
+                const step     = cellRect1.left - cellRect0.left;
+                const gap      = step - cellSize;
+
+                piece.querySelectorAll('.p-cell').forEach(c => {
+                    c.style.width  = cellSize + 'px';
+                    c.style.height = cellSize + 'px';
+                    c.style.borderRadius = '6px';
+                });
+                piece.style.gridTemplateColumns = `repeat(${shapeObj.s[0].length}, ${cellSize}px)`;
+                piece.style.gap = gap + 'px';
+
+                const pw = shapeObj.s[0].length * step - gap;
+                const ph = shapeObj.s.length    * step - gap;
+                const liftOffset = ph + cellSize * 0.5;
+                const ox = pw / 2;
+                const oy = ph / 2 + liftOffset;
+
+                // Önce style'ı ata, sonra body'e taşı — parent offset sorununu önler
+                piece.style.cssText += ';position:fixed;left:' + (e.clientX - ox) + 'px;top:' + (e.clientY - oy) + 'px;z-index:1000;pointer-events:none;transition:none;';
+                document.body.appendChild(piece);
+
+                activeDrag = { el: piece, shape: shapeObj.s, color: shapeObj.c,
+                    ox, oy, step, liftOffset,
+                    gridOriginX: cellRect0.left,
+                    gridOriginY: cellRect0.top
+                };
+                try { piece.setPointerCapture(e.pointerId); } catch(err) {}
+            });
             slot.appendChild(piece); dockEl.appendChild(slot);
         }
         checkLose();
     }
 
-    window.onpointermove = (e) => {
+    window.addEventListener('pointermove', (e) => {
         if(!activeDrag || !isGameActive) return;
         activeDrag.el.style.left = (e.clientX - activeDrag.ox) + 'px';
-        activeDrag.el.style.top = (e.clientY - activeDrag.oy) + 'px';
+        activeDrag.el.style.top  = (e.clientY - activeDrag.oy) + 'px';
         document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
         const coords = getTarget(e);
         if(coords && coords.every(p => !board[p.r][p.c])) {
             coords.forEach(p => document.getElementById(`r${p.r}c${p.c}`).classList.add('preview', activeDrag.color, 'filled'));
             updateExplosionPreview(coords);
         } else updateExplosionPreview(null);
-    };
+    });
 
-    window.onpointerup = (e) => {
+    function cancelDrag() {
+        if(!activeDrag) return;
+        const el = activeDrag.el;
+        const shape = activeDrag.shape;
+        // Body'den çıkar, slot'una geri koy
+        el.style.cssText = '';
+        el.style.gridTemplateColumns = `repeat(${shape[0].length}, 16px)`;
+        el.style.gap = '2px';
+        el.querySelectorAll('.p-cell').forEach(c => {
+            c.style.width = '16px'; c.style.height = '16px'; c.style.borderRadius = '4px';
+        });
+        el.classList.remove('dragging');
+        // Slot'una bul ve geri koy
+        const slots = dockEl.querySelectorAll('.slot');
+        let placed = false;
+        slots.forEach(slot => { if(!slot.querySelector('.piece') && !placed) { slot.appendChild(el); placed = true; } });
+        if(!placed) dockEl.appendChild(el);
+        updateExplosionPreview(null);
+        activeDrag = null;
+        document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
+    }
+
+    window.addEventListener('pointercancel', () => { cancelDrag(); });
+
+    window.addEventListener('pointerup', (e) => {
         if(!activeDrag) return;
         const coords = getTarget(e);
         if(coords && coords.every(p => !board[p.r][p.c])) {
@@ -463,20 +1069,33 @@
                 board[p.r][p.c] = activeDrag.color;
                 document.getElementById(`r${p.r}c${p.c}`).className = `cell filled ${activeDrag.color}`;
             });
-            activeDrag.el.remove(); checkLines();
-            if(dockEl.querySelectorAll('.piece').length === 0) spawn(); else checkLose();
-        } else { activeDrag.el.classList.remove('dragging'); activeDrag.el.style.left = '0'; activeDrag.el.style.top = '0'; }
-        updateExplosionPreview(null); activeDrag = null;
-    };
+            const dragEl = activeDrag.el;
+            activeDrag = null;
+            dragEl.remove();
+            checkLines(() => {
+                if(dockEl.querySelectorAll('.piece').length === 0) spawn(); else checkLose();
+            });
+        } else {
+            cancelDrag();
+        }
+        updateExplosionPreview(null);
+    });
 
     function getTarget(e) {
         if(!activeDrag) return null;
-        const rect = gridEl.getBoundingClientRect(); const cs = rect.width / 8;
-        const col = Math.round((e.clientX - (activeDrag.shape[0].length * cs/2) - rect.left) / cs);
-        const row = Math.round((e.clientY - 100 - (activeDrag.shape.length * cs/2) - rect.top) / cs);
+        const step        = activeDrag.step;
+        const liftOffset  = activeDrag.liftOffset || 0;
+        const originX     = activeDrag.gridOriginX;
+        const originY     = activeDrag.gridOriginY;
+        // Bloğun görsel sol-üst köşesi:
+        //   x = e.clientX - ox  →  merkez x = e.clientX - ox + pw/2 = e.clientX
+        //   y = e.clientY - oy  →  merkez y = e.clientY - oy + ph/2 = e.clientY - liftOffset
+        // Bloğun sol-üst hücresinin grid koordinatı:
+        const col = Math.round((e.clientX - activeDrag.ox - originX) / step);
+        const row = Math.round((e.clientY - activeDrag.oy - originY) / step);
         const res = [];
-        for(let i=0; i<activeDrag.shape.length; i++) {
-            for(let j=0; j<activeDrag.shape[0].length; j++) {
+        for(let i = 0; i < activeDrag.shape.length; i++) {
+            for(let j = 0; j < activeDrag.shape[0].length; j++) {
                 if(activeDrag.shape[i][j]) {
                     let tr = row + i, tc = col + j;
                     if(tr < 0 || tr >= 8 || tc < 0 || tc >= 8) return null;
@@ -508,49 +1127,173 @@
         cs.forEach(c => { for(let r=0; r<8; r++) document.getElementById(`r${r}c${c}`).classList.add('will-explode'); });
     }
 
-    function checkLines() {
+    function checkLines(onDone) {
         let rs = [], cs = [];
         for(let i=0; i<8; i++) { if(board[i].every(v => v)) rs.push(i); if(board.every(row => row[i])) cs.push(i); }
         let total = rs.length + cs.length;
         if(total > 0) {
+            comboStreak++;
             playSfx(blastSound);
-            if(total >= 2) { triggerScreenShake(); if(isVibrationEnabled && navigator.vibrate) navigator.vibrate([100, 50, 100]); }
-            else if(isVibrationEnabled && navigator.vibrate) navigator.vibrate(50);
+            if(total >= 2) { triggerScreenShake(); if(isHapticEnabled && navigator.vibrate) navigator.vibrate([100, 50, 100]); }
+            else if(isHapticEnabled && navigator.vibrate) navigator.vibrate(50);
 
-            // ÇARPAN SİSTEMİ
             let basePoints = total * 64;
-            let finalPoints = basePoints;
-            if(total === 2) finalPoints = basePoints * 4;
-            if(total >= 3) finalPoints = basePoints * 10;
+            let lineMulti = 1;
+            if(total === 1) lineMulti = 2;
+            if(total === 2) lineMulti = 3;
+            if(total >= 3) lineMulti = 5;
+
+            // Seri çarpanı: 1. sıra=x1, 2.=x2, 3.=x3 ...
+            let streakMulti = comboStreak;
+            let finalPoints = basePoints * lineMulti * streakMulti;
 
             updateScore(finalPoints);
+            showComboText(total, comboStreak);
 
             const toClear = [];
             rs.forEach(r => { for(let c=0; c<8; c++) toClear.push({r,c}); });
             cs.forEach(c => { for(let r=0; r<8; r++) if(!rs.includes(r)) toClear.push({r,c}); });
-            toClear.forEach(p => { createParticles(p.r, p.c); board[p.r][p.c] = null; document.getElementById(`r${p.r}c${p.c}`).className = 'cell'; });
-            if(total >= 2) showComboText(total);
+            blastClearLines(rs, cs, toClear, onDone);
+        } else {
+            comboStreak = 0; // Sıra kırılmadı, seri sıfırla
+            if(onDone) onDone();
         }
     }
 
     function triggerScreenShake() { mainWrapper.classList.add('shake-active'); setTimeout(() => mainWrapper.classList.remove('shake-active'), 300); }
 
-    function createParticles(r, c) {
-        const cell = document.getElementById(`r${r}c${c}`);
+    const COLOR_MAP = {
+        'c-1':'#FF6B35','c-2':'#4CAF50','c-3':'#E040FB','c-4':'#FFEB3B',
+        'c-5':'#42A5F5','c-6':'#26C6DA','c-7':'#EF5350','c-8':'#EC407A',
+        'c-9':'#5C6BC0','c-10':'#00E676','c-11':'#FFA726','c-12':'#7C4DFF',
+        'c-13':'#FF7043','c-14':'#66BB6A','c-15':'#29B6F6','c-16':'#CE93D8',
+        'c-17':'#F06292','c-18':'#FFD740'
+    };
+
+    function getBlockColor(cell) {
+        const cls = [...cell.classList].find(cl => cl.startsWith('c-'));
+        return COLOR_MAP[cls] || '#ffffff';
+    }
+
+    // Block Blast tarzı sıra temizleme animasyonu
+    function blastClearLines(rs, cs, toClear, onDone) {
+        const isRow = rs.length > 0;
+        const isCol = cs.length > 0;
+
+        // Adım 1: Tüm silinecek hücreler beyaz flash ile parlasın
+        toClear.forEach(({r, c}) => {
+            const cell = document.getElementById(`r${r}c${c}`);
+            cell.style.transition = 'none';
+            cell.style.filter = 'brightness(2.5) saturate(0)';
+        });
+
+        // Adım 2: 60ms sonra scale+fade out — satır veya sütun yönünde kayarak
+        setTimeout(() => {
+            toClear.forEach(({r, c}) => {
+                const cell = document.getElementById(`r${r}c${c}`);
+                const color = getBlockColor(cell);
+
+                // Yatay satır → y ekseninde sıkışıp kaybolur
+                // Dikey sütun → x ekseninde sıkışıp kaybolur
+                let tx = 0, ty = 0;
+                if(rs.includes(r)) { ty = (r < 4 ? -1 : 1) * 18; }
+                if(cs.includes(c)) { tx = (c < 4 ? -1 : 1) * 18; }
+
+                cell.style.transition = 'transform 0.18s ease-in, opacity 0.18s ease-in, filter 0.18s';
+                cell.style.transform = `translate(${tx}px, ${ty}px) scale(0.6)`;
+                cell.style.opacity = '0';
+                cell.style.filter = `brightness(1.8) drop-shadow(0 0 6px ${color})`;
+
+                // Parçacıkları bu hücre için fırlat
+                spawnBurstParticles(cell, color);
+            });
+
+            // Adım 3: 200ms sonra hücreleri gerçekten temizle
+            setTimeout(() => {
+                toClear.forEach(({r, c}) => {
+                    board[r][c] = null;
+                    const cell = document.getElementById(`r${r}c${c}`);
+                    cell.style.cssText = '';
+                    cell.className = 'cell';
+                });
+                if(onDone) onDone();
+            }, 200);
+        }, 60);
+    }
+
+    function spawnBurstParticles(cell, color) {
         const rect = cell.getBoundingClientRect();
-        const color = window.getComputedStyle(cell).backgroundColor;
-        for(let i=0; i<6; i++) {
-            const p = document.createElement('div'); p.className = 'particle'; p.style.backgroundColor = color;
-            p.style.width = '6px'; p.style.height = '6px'; p.style.left = (rect.left + 21) + 'px'; p.style.top = (rect.top + 21) + 'px';
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const sz = rect.width;
+
+        // Küçük kare parçalar — bloktan kopuyor gibi
+        const count = 5 + Math.floor(Math.random() * 3);
+        for(let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            const size = sz * (0.18 + Math.random() * 0.22);
+            const angle = (i / count) * Math.PI * 2 + Math.random() * 0.8;
+            const dist = sz * (0.8 + Math.random() * 1.4);
+            const duration = 280 + Math.random() * 180;
+            p.style.cssText = `
+                position:fixed;
+                left:${cx}px; top:${cy}px;
+                width:${size}px; height:${size}px;
+                background:${color};
+                border-radius:3px;
+                pointer-events:none;
+                z-index:3000;
+                box-shadow: inset 0 ${size*0.15}px 0 rgba(255,255,255,0.5);
+            `;
             document.body.appendChild(p);
-            p.animate([{transform:'translate(0,0) scale(1)', opacity:1}, {transform:`translate(${(Math.random()-0.5)*100}px,${(Math.random()-0.5)*100}px) scale(0)`, opacity:0}], 500).onfinish = () => p.remove();
+            p.animate([
+                { transform: `translate(-50%,-50%) scale(1) rotate(0deg)`, opacity: 1 },
+                { transform: `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px)) scale(0) rotate(${(Math.random()-0.5)*200}deg)`, opacity: 0 }
+            ], { duration, easing: 'cubic-bezier(0.22,1,0.36,1)' }).onfinish = () => p.remove();
+        }
+
+        // Parlak beyaz nokta kıvılcımlar
+        for(let i = 0; i < 6; i++) {
+            const p = document.createElement('div');
+            const angle = Math.random() * Math.PI * 2;
+            const dist = sz * (0.5 + Math.random() * 1.2);
+            p.style.cssText = `
+                position:fixed;
+                left:${cx}px; top:${cy}px;
+                width:3px; height:3px;
+                background:white;
+                border-radius:50%;
+                pointer-events:none;
+                z-index:3001;
+                box-shadow: 0 0 4px 2px ${color};
+            `;
+            document.body.appendChild(p);
+            p.animate([
+                { transform: `translate(-50%,-50%)`, opacity: 1 },
+                { transform: `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px))`, opacity: 0 }
+            ], { duration: 200 + Math.random() * 150, easing: 'ease-out' }).onfinish = () => p.remove();
         }
     }
 
-    function showComboText(n) {
-        const t = document.createElement('div'); t.className = 'dombik-text ' + (n >= 3 ? 'ultra' : 'super');
-        t.innerText = n >= 3 ? 'ULTRA DOMBİK x10!' : 'SÜPER DOMBİK x4!';
-        document.getElementById('game-container').appendChild(t); setTimeout(() => t.remove(), 1000);
+        function showComboText(lines, streak) {
+        // Seri yazısı (ard arda kırma)
+        if(streak >= 2) {
+            const streakEl = document.createElement('div');
+            streakEl.className = 'dombik-text ' + (streak >= 5 ? 'ultra' : streak >= 3 ? 'super' : '');
+            streakEl.style.cssText = `color:${streak >= 5 ? '#ff4dff' : streak >= 3 ? '#FFD700' : '#00E676'}; font-size:${28 + streak * 3}px; top:38%;`;
+            streakEl.innerText = `🔥 DOMBİK ${streak}x!`;
+            document.getElementById('game-container').appendChild(streakEl);
+            setTimeout(() => streakEl.remove(), 1100);
+        }
+        // Çoklu sıra yazısı
+        if(lines >= 2) {
+            const lineEl = document.createElement('div');
+            lineEl.className = 'dombik-text ' + (lines >= 3 ? 'ultra' : 'super');
+            lineEl.style.top = '52%';
+            lineEl.innerText = lines >= 3 ? 'ULTRA DOMBİK x5!' : 'SÜPER DOMBİK x3!';
+            document.getElementById('game-container').appendChild(lineEl);
+            setTimeout(() => lineEl.remove(), 1000);
+        }
     }
 
     function checkLose() {
@@ -568,7 +1311,7 @@
         });
         if(!canMove) {
             isGameActive = false; document.querySelectorAll('.cell.filled').forEach(cell => cell.classList.add('game-over-gray'));
-            setTimeout(() => { if(sessionHighScoreReached) newRecordAlert.classList.remove('hidden'); gameOverEl.classList.remove('hidden'); animateNumber(0, score, finalScoreEl, 1500); }, 2000);
+            setTimeout(() => { if(sessionHighScoreReached) newRecordAlert.classList.remove('hidden'); gameOverEl.classList.remove('hidden'); animateNumber(0, score, finalScoreEl, 1500); startReviveCountdown(); }, 2000);
         }
     }
 
@@ -581,7 +1324,139 @@
         window.requestAnimationFrame(step);
     }
 
+    let countdownInterval = null;
+
+    function startReviveCountdown() {
+        const circle = document.getElementById('countdown-circle');
+        const numEl  = document.getElementById('countdown-num');
+        const reviveSection = document.getElementById('revive-section');
+        const livesEl = document.getElementById('revive-lives');
+        const btnRevive = document.getElementById('btn-revive');
+        const totalDash = 220;
+        let remaining = 10;
+
+        // Hak durumunu göster
+        if(reviveLives > 0) {
+            const hearts = '❤️'.repeat(reviveLives) + '🖤'.repeat(3 - reviveLives);
+            livesEl.innerText = hearts + ' ' + reviveLives + ' canlanma hakkın var';
+            btnRevive.style.display = 'block';
+        } else {
+            livesEl.innerText = '💀 Canlanma hakkın kalmadı';
+            btnRevive.style.display = 'none';
+        }
+
+        circle.style.strokeDashoffset = '0';
+        circle.style.stroke = '#FFD700';
+        numEl.innerText = remaining;
+        reviveSection.style.display = 'block';
+        if(countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            remaining--;
+            numEl.innerText = remaining;
+            circle.style.strokeDashoffset = ((10 - remaining) / 10 * totalDash) + '';
+            if(remaining <= 2) circle.style.stroke = '#ff4d4d';
+            if(remaining <= 0) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                reviveSection.style.display = 'none';
+            }
+        }, 1000);
+    }
+
+    // ── Video dosyaları buraya ekle ──────────────────────────
+    const AD_VIDEOS = [
+        'video1.mp4',
+        'video2.mp4',
+        'video3.mp4',
+    ];
+    // ─────────────────────────────────────────────────────────
+
+    let videoSkipTimer = null;
+    let videoReviveDone = false;
+    let videoIndex = 0;
+    let reviveLives = 3; // Her oyunda 3 reklam hakkı
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.style.display = 'block';
+        setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    function reviveGame() {
+        if(reviveLives <= 0) return;
+        const videos = AD_VIDEOS.filter(v => v && v.trim() !== '');
+        if(videos.length === 0) {
+            if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+            reviveLives--;
+            doRevive(); return;
+        }
+
+        // Gerçek internet kontrolü - fetch ile ping at
+        fetch('https://www.google.com/favicon.ico', { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
+            .then(() => {
+                if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+                reviveLives--;
+                startVideoPlayback(videos);
+            })
+            .catch(() => {
+                showToast('📶 İnternet bağlantısı yok!');
+            });
+    }
+
+    function startVideoPlayback(videos) {
+        const src = videos[videoIndex % videos.length];
+        videoIndex++;
+        const overlay = document.getElementById('video-overlay');
+
+        // Eski video elementini temizle, sıfırdan yeni oluştur
+        const oldVideo = document.getElementById('ad-video');
+        const newVideo = document.createElement('video');
+        newVideo.id = 'ad-video';
+        newVideo.style.cssText = 'width:100%; display:block;';
+        newVideo.setAttribute('playsinline', '');
+        newVideo.setAttribute('webkit-playsinline', '');
+        newVideo.setAttribute('muted', '');
+        oldVideo.replaceWith(newVideo);
+
+        videoReviveDone = false;
+        overlay.style.display = 'flex';
+
+        newVideo.onended = () => { closeVideoAndRevive(); };
+        newVideo.onerror = () => {
+            overlay.style.display = 'none';
+            showToast('❌ Video oynatılamadı.');
+        };
+
+        newVideo.src = src;
+        newVideo.load();
+        newVideo.play().catch(() => {});
+    }
+
+    function skipVideo() {}
+
+    function closeVideoAndRevive() {
+        if(videoReviveDone) return;
+        videoReviveDone = true;
+        const overlay = document.getElementById('video-overlay');
+        const videoEl = document.getElementById('ad-video');
+        if(videoEl) { videoEl.onended = null; videoEl.onerror = null; videoEl.pause(); }
+        overlay.style.display = 'none';
+        doRevive();
+    }
+
+    function doRevive() {
+        newRecordAlert.classList.add('hidden');
+        gameOverEl.classList.add('hidden');
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('game-over-gray'));
+        isGameActive = true;
+        sessionHighScoreReached = false;
+        spawn();
+    }
+
     function resetGame() {
+        if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        reviveLives = 3;
+        comboStreak = 0;
         hideSettings(); score = 0; sessionHighScoreReached = false; scoreEl.innerText = "0";
         isGameActive = true; board = Array(8).fill().map(() => Array(8).fill(null));
         gridEl.innerHTML = '';
@@ -596,4 +1471,3 @@
 </script>
 </body>
 </html>
-
