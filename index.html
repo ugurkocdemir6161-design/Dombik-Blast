@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dombik Blast">
+    <meta name="theme-color" content="#4A76FD">
     <title>Dombik Blast - Pro Edition</title>
     <style>
         :root {
@@ -17,6 +20,11 @@
             --text-gold: #FFD700;
         }
 
+        html, body {
+            height: 100%;
+            height: -webkit-fill-available;
+        }
+
         body {
             background: #4A76FD;
             color: #fff;
@@ -25,6 +33,9 @@
             padding: 0;
             overflow: hidden;
             touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -143,6 +154,7 @@
             background: var(--bg-game); width: 100%; max-width: 400px;
             height: 100vh;
             height: 100dvh;
+            min-height: -webkit-fill-available;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             box-sizing: border-box;
@@ -194,7 +206,7 @@
         .dragging { position: fixed !important; z-index: 1000; pointer-events: none; transition: none !important; will-change: left, top; }
         .preview { opacity: 0.35 !important; }
 
-        .overlay { position: fixed; inset: 0; background: rgba(19, 30, 61, 0.95); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        .overlay { position: fixed; inset: 0; background: rgba(19, 30, 61, 0.95); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
         .modal-card { background: #243b7a; padding: 25px; border-radius: 30px; text-align: center; border: 5px solid #4A76FD; width: 85%; max-width: 340px; max-height: 80vh; overflow-y: auto; }
 
         .rank-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); margin: 6px 0; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s; }
@@ -532,7 +544,7 @@
     </div>
 
     <div id="toast"></div>
-    <div id="game-over" class="overlay hidden" style="background:rgba(5,0,20,0.92); backdrop-filter:blur(12px);">
+    <div id="game-over" class="overlay hidden" style="background:rgba(5,0,20,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);">
         <div style="
             position:relative; width:88%; max-width:340px;
             background: linear-gradient(160deg, #0f0020 0%, #1a0035 50%, #0a0018 100%);
@@ -750,6 +762,33 @@
     let best = getSavedBest();
     bestEl.innerText = best;
 
+    // ── iOS Ses Unlock Sistemi ──────────────────────────────────
+    let audioUnlocked = false;
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        audioUnlocked = true;
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const buf = ctx.createBuffer(1, 1, 22050);
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            src.connect(ctx.destination);
+            src.start(0);
+            ctx.resume().catch(() => {});
+        } catch(e) {}
+        [bgMusic, placeSound, blastSound].forEach(a => {
+            if (!a) return;
+            const p = a.play();
+            if (p) p.then(() => {
+                a.pause();
+                try { a.currentTime = 0; } catch(e) {}
+            }).catch(() => {});
+        });
+    }
+    document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+    document.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
+    // ────────────────────────────────────────────────────────────
+
     function showRankPanel() {
         const bestScore = Math.max(score, best);
         // Rank sıraları (büyükten küçüğe) ve bir üstündeki limit
@@ -783,14 +822,23 @@
 
     function playSfx(audio) {
         if (!audio || !isVibrationEnabled) return;
-        audio.currentTime = 0;
-        audio.play().catch(e => console.log("Ses çalma hatası:", e));
+        // iOS'ta currentTime sıfırlamak bazen hata fırlatır, try/catch ile sarıyoruz
+        try { audio.currentTime = 0; } catch(e) {}
+        audio.play().catch(() => {});
     }
 
     function startGame() {
         document.getElementById('main-menu').classList.add('hidden');
         resetGame();
-        if(isMusicEnabled) bgMusic.play().catch(e => console.log("Müzik başlatılamadı"));
+        if(isMusicEnabled) {
+            bgMusic.currentTime = 0;
+            bgMusic.play().catch(() => {
+                // iOS'ta autoplay engellendi — kullanıcı bir sonraki dokunuşta başlatılacak
+                document.addEventListener('touchstart', () => {
+                    if(isMusicEnabled) bgMusic.play().catch(() => {});
+                }, { once: true, passive: true });
+            });
+        }
     }
 
     function backToMenu() {
@@ -891,7 +939,7 @@
 
     function updateRankSystem(isNewGameStart = false) {
         let bestScore = Math.max(score, best);
-        let currentRank = RANK_LEVELS.find(r => bestScore >= r.limit);
+        let currentRank = RANK_LEVELS.find(r => bestScore >= r.limit) || RANK_LEVELS[RANK_LEVELS.length - 1];
 
         headerRankBtn.classList.remove('rank-eqo-fx', 'rank-sengolo-fx', 'rank-megachad-fx', 'rank-fil-fx', 'rank-polo-fx', 'rank-engell-fx', 'rank-kozmik-fx');
         if (currentRank.fx) headerRankBtn.classList.add(currentRank.fx);
@@ -1027,7 +1075,10 @@
         if(!activeDrag || !isGameActive) return;
         activeDrag.el.style.left = (e.clientX - activeDrag.ox) + 'px';
         activeDrag.el.style.top  = (e.clientY - activeDrag.oy) + 'px';
-        document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
+        document.querySelectorAll('.cell').forEach(c => {
+            const m = c.id.match(/^r(\d+)c(\d+)$/);
+            if(m && !board[+m[1]][+m[2]]) c.className = 'cell';
+        });
         const coords = getTarget(e);
         if(coords && coords.every(p => !board[p.r][p.c])) {
             coords.forEach(p => document.getElementById(`r${p.r}c${p.c}`).classList.add('preview', activeDrag.color, 'filled'));
@@ -1054,7 +1105,10 @@
         if(!placed) dockEl.appendChild(el);
         updateExplosionPreview(null);
         activeDrag = null;
-        document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
+        document.querySelectorAll('.cell').forEach(c => {
+            const m = c.id.match(/^r(\d+)c(\d+)$/);
+            if(m && !board[+m[1]][+m[2]]) c.className = 'cell';
+        });
     }
 
     window.addEventListener('pointercancel', () => { cancelDrag(); });
@@ -1177,9 +1231,6 @@
 
     // Block Blast tarzı sıra temizleme animasyonu
     function blastClearLines(rs, cs, toClear, onDone) {
-        const isRow = rs.length > 0;
-        const isCol = cs.length > 0;
-
         // Adım 1: Tüm silinecek hücreler beyaz flash ile parlasın
         toClear.forEach(({r, c}) => {
             const cell = document.getElementById(`r${r}c${c}`);
@@ -1275,7 +1326,7 @@
         }
     }
 
-        function showComboText(lines, streak) {
+    function showComboText(lines, streak) {
         // Seri yazısı (ard arda kırma)
         if(streak >= 2) {
             const streakEl = document.createElement('div');
@@ -1371,7 +1422,6 @@
     ];
     // ─────────────────────────────────────────────────────────
 
-    let videoSkipTimer = null;
     let videoReviveDone = false;
     let videoIndex = 0;
     let reviveLives = 3; // Her oyunda 3 reklam hakkı
@@ -1413,9 +1463,13 @@
         const newVideo = document.createElement('video');
         newVideo.id = 'ad-video';
         newVideo.style.cssText = 'width:100%; display:block;';
+        // iOS için zorunlu attribute'lar — setAttribute ile set edilmeli
         newVideo.setAttribute('playsinline', '');
         newVideo.setAttribute('webkit-playsinline', '');
         newVideo.setAttribute('muted', '');
+        newVideo.setAttribute('preload', 'auto');
+        newVideo.muted = true; // property olarak da set et (iOS bazen attribute'u görmez)
+        newVideo.playsInline = true;
         oldVideo.replaceWith(newVideo);
 
         videoReviveDone = false;
@@ -1429,7 +1483,11 @@
 
         newVideo.src = src;
         newVideo.load();
-        newVideo.play().catch(() => {});
+        // iOS'ta play() promise'i kullanıcı etkileşimi sonrası çalışır
+        newVideo.play().catch(() => {
+            showToast('▶️ Videoyu başlatmak için ekrana dokun');
+            newVideo.addEventListener('touchstart', () => newVideo.play().catch(() => {}), { once: true });
+        });
     }
 
     function skipVideo() {}
