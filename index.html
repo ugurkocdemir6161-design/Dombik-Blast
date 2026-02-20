@@ -633,9 +633,25 @@
 
     <!-- Video Overlay -->
     <div id="video-overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:99999; flex-direction:column; justify-content:center; align-items:center;">
-        <div style="position:relative; width:100%; max-width:400px;">
-            <div style="background:rgba(0,0,0,0.7); color:#FFD700; text-align:center; padding:8px; font-size:15px; font-weight:bold; letter-spacing:1px;">📺 DOMBİK REKLAM</div>
-            <video id="ad-video" style="width:100%; display:block;" playsinline webkit-playsinline muted></video>
+        <div style="position:relative; width:100%; max-width:400px; height:100%;">
+            <!-- Üst bar -->
+            <div style="position:absolute; top:0; left:0; right:0; z-index:2; display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);">
+                <div style="color:#FFD700; font-size:13px; font-weight:900; letter-spacing:1px;">📺 REKLAM</div>
+                <div id="ad-timer" style="background:rgba(0,0,0,0.6); color:#fff; font-size:13px; font-weight:bold; padding:5px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.2);">⏳ <span id="ad-seconds">15</span>s</div>
+            </div>
+            <!-- Video -->
+            <video id="ad-video" style="width:100%; height:100%; object-fit:cover; display:block;" playsinline webkit-playsinline muted></video>
+            <!-- Alt bar -->
+            <div style="position:absolute; bottom:0; left:0; right:0; z-index:2; padding:16px 14px; background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);">
+                <div style="color:rgba(255,255,255,0.5); font-size:11px; margin-bottom:8px; letter-spacing:1px;">Canlanmak için reklamı izle</div>
+                <button id="ad-skip-btn" onclick="skipVideoNow()" style="
+                    display:none; width:100%; padding:13px; border:none; border-radius:14px;
+                    background:linear-gradient(135deg,#00C853,#00E676); color:#fff;
+                    font-size:16px; font-weight:900; cursor:pointer; font-family:inherit;
+                    box-shadow: 0 4px 0 #007B33;
+                ">✅ CANLAN!</button>
+                <div id="ad-skip-info" style="color:rgba(255,255,255,0.4); font-size:12px; text-align:center;">Reklam bittikten sonra canlanabilirsin</div>
+            </div>
         </div>
     </div>
 
@@ -1414,17 +1430,23 @@
         }, 1000);
     }
 
-    // ── Video dosyaları buraya ekle ──────────────────────────
+    // ── Ücretsiz Stok Videolar (Mixkit CDN — CORS yok, GitHub'da çalışır) ──
     const AD_VIDEOS = [
-        'video1.mp4',
-        'video2.mp4',
-        'video3.mp4',
+        'https://mixkit.co/free-stock-video/download/urban-fashion-model-walking-down-the-street-28455',
+        'https://mixkit.co/free-stock-video/download/young-woman-talking-on-a-video-call-on-laptop-5187',
+        'https://mixkit.co/free-stock-video/download/man-hands-with-a-drone-remote-control-5162',
+        'https://mixkit.co/free-stock-video/download/couple-running-in-the-rain-with-umbrella-6247',
+        'https://mixkit.co/free-stock-video/download/woman-drinking-morning-coffee-looking-at-the-city-5159',
+        'https://mixkit.co/free-stock-video/download/aerial-view-of-the-sea-and-sandy-beach-1090',
+        'https://mixkit.co/free-stock-video/download/young-woman-smiling-while-looking-at-phone-5190',
+        'https://mixkit.co/free-stock-video/download/surfer-taking-on-an-ocean-wave-1104',
     ];
-    // ─────────────────────────────────────────────────────────
 
     let videoReviveDone = false;
-    let videoIndex = 0;
-    let reviveLives = 3; // Her oyunda 3 reklam hakkı
+    let videoIndex = Math.floor(Math.random() * AD_VIDEOS.length); // rastgele başla
+    let reviveLives = 3;
+    let adTimerInterval = null;
+    let adFinished = false;
 
     function showToast(msg) {
         const t = document.getElementById('toast');
@@ -1434,67 +1456,107 @@
 
     function reviveGame() {
         if(reviveLives <= 0) return;
-        const videos = AD_VIDEOS.filter(v => v && v.trim() !== '');
-        if(videos.length === 0) {
-            if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-            reviveLives--;
-            doRevive(); return;
-        }
-
-        // Gerçek internet kontrolü - fetch ile ping at
+        // İnternet kontrolü
         fetch('https://www.google.com/favicon.ico', { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
             .then(() => {
                 if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
                 reviveLives--;
-                startVideoPlayback(videos);
+                startVideoPlayback();
             })
             .catch(() => {
-                showToast('📶 İnternet bağlantısı yok!');
+                showToast('📶 İnternet bağlantısı yok! Reklam izlenemiyor.');
             });
     }
 
-    function startVideoPlayback(videos) {
-        const src = videos[videoIndex % videos.length];
-        videoIndex++;
+    function startVideoPlayback() {
         const overlay = document.getElementById('video-overlay');
+        const skipBtn = document.getElementById('ad-skip-btn');
+        const skipInfo = document.getElementById('ad-skip-info');
+        const secondsEl = document.getElementById('ad-seconds');
 
-        // Eski video elementini temizle, sıfırdan yeni oluştur
+        // Video seç (döngüsel, rastgele)
+        const src = AD_VIDEOS[videoIndex % AD_VIDEOS.length];
+        videoIndex++;
+
+        // Video elementini sıfırdan oluştur
         const oldVideo = document.getElementById('ad-video');
         const newVideo = document.createElement('video');
         newVideo.id = 'ad-video';
-        newVideo.style.cssText = 'width:100%; display:block;';
-        // iOS için zorunlu attribute'lar — setAttribute ile set edilmeli
+        newVideo.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
         newVideo.setAttribute('playsinline', '');
         newVideo.setAttribute('webkit-playsinline', '');
         newVideo.setAttribute('muted', '');
         newVideo.setAttribute('preload', 'auto');
-        newVideo.muted = true; // property olarak da set et (iOS bazen attribute'u görmez)
+        newVideo.muted = true;
         newVideo.playsInline = true;
         oldVideo.replaceWith(newVideo);
 
         videoReviveDone = false;
+        adFinished = false;
+        skipBtn.style.display = 'none';
+        skipInfo.style.display = 'block';
         overlay.style.display = 'flex';
 
-        newVideo.onended = () => { closeVideoAndRevive(); };
+        // Geri sayım — 15 saniye izle, sonra canlan butonu çıksın
+        let remaining = 15;
+        secondsEl.innerText = remaining;
+        if(adTimerInterval) clearInterval(adTimerInterval);
+        adTimerInterval = setInterval(() => {
+            remaining--;
+            secondsEl.innerText = remaining;
+            if(remaining <= 0) {
+                clearInterval(adTimerInterval);
+                adTimerInterval = null;
+                adFinished = true;
+                skipBtn.style.display = 'block';
+                skipInfo.style.display = 'none';
+            }
+        }, 1000);
+
+        // Video yükle ve oynat
+        newVideo.onended = () => {
+            adFinished = true;
+            skipBtn.style.display = 'block';
+            skipInfo.style.display = 'none';
+        };
         newVideo.onerror = () => {
-            overlay.style.display = 'none';
-            showToast('❌ Video oynatılamadı.');
+            // Video yüklenemedi — başka videoyu dene
+            clearInterval(adTimerInterval);
+            const nextSrc = AD_VIDEOS[videoIndex % AD_VIDEOS.length];
+            videoIndex++;
+            newVideo.src = nextSrc;
+            newVideo.load();
+            newVideo.play().catch(() => {
+                // Hiçbiri çalışmadı, direkt canlandır
+                overlay.style.display = 'none';
+                clearInterval(adTimerInterval);
+                doRevive();
+            });
         };
 
         newVideo.src = src;
         newVideo.load();
-        // iOS'ta play() promise'i kullanıcı etkileşimi sonrası çalışır
         newVideo.play().catch(() => {
-            showToast('▶️ Videoyu başlatmak için ekrana dokun');
-            newVideo.addEventListener('touchstart', () => newVideo.play().catch(() => {}), { once: true });
+            // iOS autoplay engeli — dokunmayı bekle
+            newVideo.addEventListener('touchstart', () => newVideo.play().catch(() => {}), { once: true, passive: true });
         });
     }
 
+    function skipVideoNow() {
+        if(!adFinished) return; // 15 saniye dolmadan çalışmaz
+        clearInterval(adTimerInterval);
+        adTimerInterval = null;
+        closeVideoAndRevive();
+    }
+
+    // Eski skipVideo fonksiyonu (boş bırak — artık skipVideoNow kullanılıyor)
     function skipVideo() {}
 
     function closeVideoAndRevive() {
         if(videoReviveDone) return;
         videoReviveDone = true;
+        clearInterval(adTimerInterval);
+        adTimerInterval = null;
         const overlay = document.getElementById('video-overlay');
         const videoEl = document.getElementById('ad-video');
         if(videoEl) { videoEl.onended = null; videoEl.onerror = null; videoEl.pause(); }
