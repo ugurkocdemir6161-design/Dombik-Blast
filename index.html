@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Dombik Blast">
-    <meta name="theme-color" content="#4A76FD">
     <title>Dombik Blast - Pro Edition</title>
     <style>
         :root {
@@ -20,22 +17,15 @@
             --text-gold: #FFD700;
         }
 
-        html, body {
-            height: 100%;
-            height: -webkit-fill-available;
-        }
-
         body {
             background: #4A76FD;
             color: #fff;
             font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
             margin: 0;
             padding: 0;
+            padding-top: env(safe-area-inset-top);
             overflow: hidden;
             touch-action: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -90,11 +80,6 @@
             100% { box-shadow: 0 0 25px #E040FB, inset 0 0 15px #4A148C; border-color: #E040FB; filter: hue-rotate(360deg) brightness(1); }
         }
 
-        @keyframes recordPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255,215,0,0.5); }
-            50% { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,215,0,0.8); }
-        }
-
         .rank-eqo-fx     { animation: fire 1.5s infinite ease-in-out !important; border: 2px solid #ff4d4d !important; background: linear-gradient(45deg, #800000, #ff4d4d) !important; }
         .rank-sengolo-fx { animation: voidAnim 2s infinite ease-in-out !important; border: 3px solid #4B0082 !important; background: linear-gradient(45deg, #000, #1a0033, #000) !important; color: #fff !important; }
         .rank-megachad-fx { animation: megaChadAnim 1.8s infinite ease-in-out !important; border: 3px solid #FFD700 !important; background: linear-gradient(45deg, #3d2b00, #7a5500, #3d2b00) !important; color: #FFD700 !important; }
@@ -127,7 +112,7 @@
         .rank-up-overlay.show .rank-up-card { transform: scale(1); }
         .rank-up-label { font-size: 13px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; opacity: 0.8; margin-bottom: 6px; }
         .rank-up-name { font-size: 30px; font-weight: 900; margin: 8px 0; line-height: 1.1; }
-        .rank-up-img { width: 130px; height: 130px; border-radius: 20px; object-fit: cover; margin: 12px auto; display: block; border: 3px solid rgba(255,255,255,0.4); }
+        .rank-up-img { width: 100px; height: 100px; border-radius: 16px; object-fit: cover; margin: 12px auto; display: block; border: 3px solid rgba(255,255,255,0.4); }
         .rank-up-msg { font-size: 14px; font-weight: 700; opacity: 0.9; margin-top: 8px; }
 
         .confetti { position: absolute; width: 10px; height: 10px; z-index: 10000; pointer-events: none; }
@@ -151,17 +136,11 @@
         .cell.game-over-gray { filter: grayscale(1) brightness(0.4) !important; transition: filter 2s ease, brightness 2s ease !important; }
 
         .game-wrapper {
-            background: var(--bg-game); width: 100%; max-width: 400px;
-            height: 100vh;
-            height: 100dvh;
-            min-height: -webkit-fill-available;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            box-sizing: border-box;
+            background: var(--bg-game); width: 100%; max-width: 400px; height: 100vh;
             display: flex; flex-direction: column; align-items: center; position: relative;
         }
 
-        #header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px 5px 20px; box-sizing: border-box; }
+        #header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 50px 20px 5px 20px; box-sizing: border-box; }
         .high-score-box { display: flex; align-items: center; color: var(--text-gold); font-size: 24px; font-weight: bold; }
         .header-icons { display: flex; gap: 15px; align-items: center; }
 
@@ -171,11 +150,11 @@
             transition: all 0.3s ease;
         }
 
-        .rank-btn-icon { width: 56px; height: 56px; background: #131E3D; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .rank-btn-icon { width: 40px; height: 40px; background: #131E3D; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .rank-btn-icon img { width: 100%; height: 100%; object-fit: cover; }
         .settings-icon { font-size: 32px; color: #fff; cursor: pointer; }
 
-        #score { font-size: 65px; font-weight: 900; color: white; margin: 8px 0; letter-spacing: -2px; }
+        #score { font-size: 75px; font-weight: 900; color: white; margin: 15px 0; letter-spacing: -2px; }
 
         #game-container { background: var(--bg-grid); padding: 8px; border-radius: 12px; border: 4px solid #1a2a5a; position: relative; }
         #grid { display: grid; grid-template-columns: repeat(8, var(--cell)); grid-template-rows: repeat(8, var(--cell)); gap: var(--gap); }
@@ -190,7 +169,7 @@
                 0 2px 8px rgba(0,0,0,0.4);
         }
 
-        #dock { margin-top: 16px; display: flex; gap: 15px; height: 120px; align-items: center; }
+        #dock { margin-top: 40px; display: flex; gap: 15px; height: 120px; align-items: center; }
         .slot { width: 105px; height: 105px; display: flex; justify-content: center; align-items: center; }
         .piece { display: grid; gap: 2px; }
         .p-cell { width: 16px; height: 16px; border-radius: 4px; }
@@ -206,12 +185,12 @@
         .dragging { position: fixed !important; z-index: 1000; pointer-events: none; transition: none !important; will-change: left, top; }
         .preview { opacity: 0.35 !important; }
 
-        .overlay { position: fixed; inset: 0; background: rgba(19, 30, 61, 0.95); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .overlay { position: fixed; inset: 0; background: rgba(19, 30, 61, 0.95); z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
         .modal-card { background: #243b7a; padding: 25px; border-radius: 30px; text-align: center; border: 5px solid #4A76FD; width: 85%; max-width: 340px; max-height: 80vh; overflow-y: auto; }
 
         .rank-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); margin: 6px 0; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s; }
         .rank-item.active { border-color: var(--text-gold); background: rgba(255,215,0,0.12); box-shadow: 0 0 16px rgba(255,215,0,0.15); }
-        .rank-icon-placeholder { width: 62px; height: 62px; background: #131E3D; border-radius: 12px; margin-right: 12px; overflow: hidden; flex-shrink:0; }
+        .rank-icon-placeholder { width: 44px; height: 44px; background: #131E3D; border-radius: 10px; margin-right: 10px; overflow: hidden; flex-shrink:0; }
         .rank-icon-placeholder img { width: 100%; height: 100%; object-fit: cover; }
         .rank-info { flex: 1; min-width: 0; }
         .rank-name { display: block; font-weight: 900; font-size: 13px; letter-spacing: 0.5px; }
@@ -440,7 +419,7 @@
                     <div class="rank-crown">🎯</div>
                 </div>
                 <div class="rank-item" id="rank-155000">
-                    <div class="rank-icon-placeholder"><img src="nemo.png"></div>
+                    <div class="rank-icon-placeholder"><img src="memo.png"></div>
                     <div class="rank-info">
                         <span class="rank-name" style="color:#FFAB40;">KAYIP BALIK MEMO</span>
                         <span class="rank-score">155.000+ Puan</span>
@@ -449,7 +428,7 @@
                     <div class="rank-crown">🐟</div>
                 </div>
                 <div class="rank-item" id="rank-98000">
-                    <div class="rank-icon-placeholder"><img src="filrank.png"></div>
+                    <div class="rank-icon-placeholder"><img src="fil.png"></div>
                     <div class="rank-info">
                         <span class="rank-name" style="color:#80DEEA;">FİL</span>
                         <span class="rank-score">98.000+ Puan</span>
@@ -458,7 +437,7 @@
                     <div class="rank-crown">🐘</div>
                 </div>
                 <div class="rank-item" id="rank-59000">
-                    <div class="rank-icon-placeholder"><img src="goldrank.png"></div>
+                    <div class="rank-icon-placeholder"><img src="megachad.png"></div>
                     <div class="rank-info">
                         <span class="rank-name" style="color:#FFD700;">MEGA CHAD</span>
                         <span class="rank-score">59.000+ Puan</span>
@@ -544,114 +523,33 @@
     </div>
 
     <div id="toast"></div>
-    <div id="game-over" class="overlay hidden" style="background:rgba(5,0,20,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);">
-        <div style="
-            position:relative; width:88%; max-width:340px;
-            background: linear-gradient(160deg, #0f0020 0%, #1a0035 50%, #0a0018 100%);
-            border-radius: 32px;
-            border: 2px solid rgba(255,77,77,0.5);
-            box-shadow: 0 0 60px rgba(255,50,50,0.25), 0 0 120px rgba(180,0,255,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
-            padding: 28px 24px 24px;
-            text-align: center;
-            overflow: hidden;
-        ">
-            <!-- Arka plan ızgara deseni -->
-            <div style="position:absolute;inset:0;border-radius:32px;background-image:radial-gradient(rgba(255,77,77,0.07) 1px, transparent 1px);background-size:18px 18px;pointer-events:none;"></div>
-
-            <!-- Üst dekor çizgisi -->
-            <div style="position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#ff4d4d,#e040fb,transparent);border-radius:2px;"></div>
-
-            <!-- YENİ REKOR banner -->
-            <div id="new-record-alert" class="hidden" style="
-                position:relative; margin: 0 0 16px;
-                background: linear-gradient(135deg, #b8860b, #FFD700, #b8860b);
-                border-radius: 16px; padding: 10px 16px;
-                font-size: 15px; font-weight: 900; color: #000;
-                letter-spacing: 2px; box-shadow: 0 0 30px rgba(255,215,0,0.5);
-                animation: recordPulse 1s ease-in-out infinite;
-            ">👑 YENİ REKOR! 👑</div>
-
-            <!-- OYUN BİTTİ başlığı -->
-            <div style="position:relative; margin-bottom: 4px;">
-                <div style="font-size:11px; font-weight:900; letter-spacing:5px; color:rgba(255,100,100,0.7); margin-bottom:6px;">● OYUN BİTTİ ●</div>
-                <div style="font-size:42px; font-weight:900; color:#ff4d4d; letter-spacing:2px; text-shadow:0 0 30px rgba(255,77,77,0.8), 0 0 60px rgba(255,77,77,0.3); line-height:1;">💀 GAME<br>OVER</div>
-            </div>
-
-            <!-- Skor kutusu -->
-            <div style="
-                position:relative; margin: 18px 0 16px;
-                background: rgba(255,255,255,0.04);
-                border: 1px solid rgba(255,215,0,0.2);
-                border-radius: 20px; padding: 14px 20px;
-            ">
-                <div style="font-size:10px; font-weight:900; letter-spacing:4px; color:rgba(255,215,0,0.6); margin-bottom:6px;">SKORUN</div>
-                <div id="final-score" style="font-size:62px; font-weight:900; color:#FFD700; line-height:1; text-shadow:0 0 20px rgba(255,215,0,0.6);">0</div>
-            </div>
-
-            <!-- Canlanma bölümü -->
-            <div id="revive-section" style="margin-bottom:14px;">
-                <div id="revive-lives" style="color:rgba(255,255,255,0.5); font-size:12px; margin-bottom:10px; letter-spacing:1px;"></div>
-                <div id="countdown-ring" style="position:relative; width:70px; height:70px; margin:0 auto 10px;">
-                    <svg width="70" height="70" viewBox="0 0 80 80" style="transform:rotate(-90deg)">
+    <div id="game-over" class="overlay hidden">
+        <div class="modal-card" style="border-color: #ff4d4d;">
+            <div id="new-record-alert" class="hidden">👑 YENİ REKOR! 👑</div>
+            <h1 style="color:#ff4d4d; margin:0;">OYUN BİTTİ</h1>
+            <p style="color:white; margin:10px 0;">SKORUN</p>
+            <h2 id="final-score" style="font-size:60px; margin:10px 0; color:var(--text-gold);">0</h2>
+            <div id="revive-section">
+                <div id="revive-lives" style="color:rgba(255,255,255,0.6); font-size:13px; margin-bottom:6px; letter-spacing:1px;"></div>
+                <div id="countdown-ring">
+                    <svg width="80" height="80" viewBox="0 0 80 80">
                         <circle class="bg" cx="40" cy="40" r="35"/>
                         <circle class="progress" id="countdown-circle" cx="40" cy="40" r="35"/>
                     </svg>
-                    <div id="countdown-num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#FFD700;">10</div>
+                    <div id="countdown-num">10</div>
                 </div>
-                <button class="btn-revive" id="btn-revive" onclick="reviveGame()" style="
-                    background: linear-gradient(135deg, #00C853, #00E676);
-                    border-radius: 16px; font-size:15px; letter-spacing:1px;
-                    box-shadow: 0 6px 0 #007B33, 0 0 30px rgba(0,230,118,0.3);
-                ">📺 VİDEO İZLE VE CANLAN</button>
+                <button class="btn-revive" id="btn-revive" onclick="reviveGame()">📺 VİDEO İZLE VE CANLAN</button>
             </div>
-
-            <!-- Alt butonlar -->
-            <button onclick="resetGame()" style="
-                width:100%; padding:15px 0; margin:6px 0;
-                background: linear-gradient(135deg, #ff4d4d, #c0392b);
-                border:none; border-radius:16px; color:#fff;
-                font-size:17px; font-weight:900; letter-spacing:1px; cursor:pointer;
-                box-shadow: 0 6px 0 #7f0000, 0 0 25px rgba(255,77,77,0.3);
-                transition: transform 0.08s, box-shadow 0.08s;
-                font-family: inherit;
-            " onmousedown="this.style.transform='translateY(4px)';this.style.boxShadow='0 2px 0 #7f0000'" onmouseup="this.style.transform='';this.style.boxShadow='0 6px 0 #7f0000, 0 0 25px rgba(255,77,77,0.3)'">🔄 TEKRAR DENE</button>
-
-            <button onclick="backToMenu()" style="
-                width:100%; padding:13px 0; margin:4px 0 0;
-                background: rgba(255,255,255,0.08);
-                border: 1px solid rgba(255,255,255,0.15);
-                border-radius:16px; color:rgba(255,255,255,0.8);
-                font-size:15px; font-weight:700; cursor:pointer;
-                transition: background 0.2s;
-                font-family: inherit;
-            " onmousedown="this.style.background='rgba(255,255,255,0.15)'" onmouseup="this.style.background='rgba(255,255,255,0.08)'">🏠 ANA MENÜ</button>
-
-            <!-- Alt dekor çizgisi -->
-            <div style="position:absolute;bottom:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#e040fb,#ff4d4d,transparent);border-radius:2px;"></div>
+            <button class="btn" onclick="resetGame()">TEKRAR DENE</button>
+            <button class="btn" style="background:#fff;" onclick="backToMenu()">ANA MENÜ</button>
         </div>
     </div>
 
     <!-- Video Overlay -->
     <div id="video-overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:99999; flex-direction:column; justify-content:center; align-items:center;">
-        <div style="position:relative; width:100%; max-width:400px; height:100%;">
-            <!-- Üst bar -->
-            <div style="position:absolute; top:0; left:0; right:0; z-index:2; display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);">
-                <div style="color:#FFD700; font-size:13px; font-weight:900; letter-spacing:1px;">📺 REKLAM</div>
-                <div id="ad-timer" style="background:rgba(0,0,0,0.6); color:#fff; font-size:13px; font-weight:bold; padding:5px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.2);">⏳ <span id="ad-seconds">15</span>s</div>
-            </div>
-            <!-- Video -->
-            <video id="ad-video" style="width:100%; height:100%; object-fit:cover; display:block;" playsinline webkit-playsinline muted></video>
-            <!-- Alt bar -->
-            <div style="position:absolute; bottom:0; left:0; right:0; z-index:2; padding:16px 14px; background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);">
-                <div style="color:rgba(255,255,255,0.5); font-size:11px; margin-bottom:8px; letter-spacing:1px;">Canlanmak için reklamı izle</div>
-                <button id="ad-skip-btn" onclick="skipVideoNow()" style="
-                    display:none; width:100%; padding:13px; border:none; border-radius:14px;
-                    background:linear-gradient(135deg,#00C853,#00E676); color:#fff;
-                    font-size:16px; font-weight:900; cursor:pointer; font-family:inherit;
-                    box-shadow: 0 4px 0 #007B33;
-                ">✅ CANLAN!</button>
-                <div id="ad-skip-info" style="color:rgba(255,255,255,0.4); font-size:12px; text-align:center;">Reklam bittikten sonra canlanabilirsin</div>
-            </div>
+        <div style="position:relative; width:100%; max-width:400px;">
+            <div style="background:rgba(0,0,0,0.7); color:#FFD700; text-align:center; padding:8px; font-size:15px; font-weight:bold; letter-spacing:1px;">📺 DOMBİK REKLAM</div>
+            <video id="ad-video" style="width:100%; display:block;" playsinline webkit-playsinline muted></video>
         </div>
     </div>
 
@@ -702,19 +600,19 @@
     let currentRankThreshold = 0;
 
     const RANK_LEVELS = [
-        {limit: 370000, name: "KOZMİK UĞUR BÖCEĞİ", img: "kozmik.png",   id: "rank-370000", fx: "rank-kozmik-fx"},
-        {limit: 250000, name: "ENGELLİ HUNTER 55",  img: "engelli.png",  id: "rank-250000", fx: "rank-engell-fx"},
-        {limit: 155000, name: "KAYIP BALIK MEMO",    img: "memo.png",     id: "rank-155000", fx: "rank-polo-fx"},
-        {limit: 98000,  name: "FİL",                 img: "fil.png",      id: "rank-98000",  fx: "rank-fil-fx"},
-        {limit: 59000,  name: "MEGA CHAD",           img: "megachad.png", id: "rank-59000",  fx: "rank-megachad-fx"},
-        {limit: 34000,  name: "ŞENGOLO",             img: "sengolo.png",  id: "rank-34000",  fx: "rank-sengolo-fx"},
-        {limit: 17000,  name: "EQO",                 img: "eko.png",      id: "rank-17000",  fx: "rank-eqo-fx"},
-        {limit: 9000,   name: "İBO!!",               img: "ibo.png",      id: "rank-9000",   fx: ""},
-        {limit: 5200,   name: "RİDER 125",           img: "sekko.png",    id: "rank-5200",   fx: ""},
-        {limit: 3000,   name: "FERİ-BOT",            img: "feribot.png",  id: "rank-3000",   fx: ""},
-        {limit: 1500,   name: "SEDO TVS",            img: "TVS.png",      id: "rank-1500",   fx: ""},
-        {limit: 600,    name: "VAKKO",               img: "vakko.png",    id: "rank-600",    fx: ""},
-        {limit: 0,      name: "Dürümbüs Memo",       img: "dürümbüs_memo.png", id: "rank-0", fx: ""}
+        {limit: 370000, name: "KOZMİK UĞUR BÖCEĞİ", img: "kozmik.png",        id: "rank-370000", fx: "rank-kozmik-fx"},
+        {limit: 250000, name: "ENGELLİ HUNTER 55",  img: "engelli.png",        id: "rank-250000", fx: "rank-engell-fx"},
+        {limit: 155000, name: "KAYIP BALIK MEMO",    img: "memo.png",           id: "rank-155000", fx: "rank-polo-fx"},
+        {limit: 98000,  name: "FİL",                 img: "fil.png",            id: "rank-98000",  fx: "rank-fil-fx"},
+        {limit: 59000,  name: "MEGA CHAD",           img: "megachad.png",       id: "rank-59000",  fx: "rank-megachad-fx"},
+        {limit: 34000,  name: "ŞENGOLO",             img: "sengolo.png",        id: "rank-34000",  fx: "rank-sengolo-fx"},
+        {limit: 17000,  name: "EQO",                 img: "eko.png",            id: "rank-17000",  fx: "rank-eqo-fx"},
+        {limit: 9000,   name: "İBO!!",               img: "ibo.png",            id: "rank-9000",   fx: ""},
+        {limit: 5200,   name: "RİDER 125",           img: "sekko.png",          id: "rank-5200",   fx: ""},
+        {limit: 3000,   name: "FERİ-BOT",            img: "feribot.png",        id: "rank-3000",   fx: ""},
+        {limit: 1500,   name: "SEDO TVS",            img: "TVS.png",            id: "rank-1500",   fx: ""},
+        {limit: 600,    name: "VAKKO",               img: "vakko.png",          id: "rank-600",    fx: ""},
+        {limit: 0,      name: "Dürümbüs Memo",       img: "dürümbüs_memo.png",  id: "rank-0",      fx: ""}
     ];
 
     // ===================== BLOKLAR =====================
@@ -778,33 +676,6 @@
     let best = getSavedBest();
     bestEl.innerText = best;
 
-    // ── iOS Ses Unlock Sistemi ──────────────────────────────────
-    let audioUnlocked = false;
-    function unlockAudio() {
-        if (audioUnlocked) return;
-        audioUnlocked = true;
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const buf = ctx.createBuffer(1, 1, 22050);
-            const src = ctx.createBufferSource();
-            src.buffer = buf;
-            src.connect(ctx.destination);
-            src.start(0);
-            ctx.resume().catch(() => {});
-        } catch(e) {}
-        [bgMusic, placeSound, blastSound].forEach(a => {
-            if (!a) return;
-            const p = a.play();
-            if (p) p.then(() => {
-                a.pause();
-                try { a.currentTime = 0; } catch(e) {}
-            }).catch(() => {});
-        });
-    }
-    document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
-    document.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
-    // ────────────────────────────────────────────────────────────
-
     function showRankPanel() {
         const bestScore = Math.max(score, best);
         // Rank sıraları (büyükten küçüğe) ve bir üstündeki limit
@@ -838,23 +709,14 @@
 
     function playSfx(audio) {
         if (!audio || !isVibrationEnabled) return;
-        // iOS'ta currentTime sıfırlamak bazen hata fırlatır, try/catch ile sarıyoruz
-        try { audio.currentTime = 0; } catch(e) {}
-        audio.play().catch(() => {});
+        audio.currentTime = 0;
+        audio.play().catch(e => console.log("Ses çalma hatası:", e));
     }
 
     function startGame() {
         document.getElementById('main-menu').classList.add('hidden');
         resetGame();
-        if(isMusicEnabled) {
-            bgMusic.currentTime = 0;
-            bgMusic.play().catch(() => {
-                // iOS'ta autoplay engellendi — kullanıcı bir sonraki dokunuşta başlatılacak
-                document.addEventListener('touchstart', () => {
-                    if(isMusicEnabled) bgMusic.play().catch(() => {});
-                }, { once: true, passive: true });
-            });
-        }
+        if(isMusicEnabled) bgMusic.play().catch(e => console.log("Müzik başlatılamadı"));
     }
 
     function backToMenu() {
@@ -955,7 +817,7 @@
 
     function updateRankSystem(isNewGameStart = false) {
         let bestScore = Math.max(score, best);
-        let currentRank = RANK_LEVELS.find(r => bestScore >= r.limit) || RANK_LEVELS[RANK_LEVELS.length - 1];
+        let currentRank = RANK_LEVELS.find(r => bestScore >= r.limit);
 
         headerRankBtn.classList.remove('rank-eqo-fx', 'rank-sengolo-fx', 'rank-megachad-fx', 'rank-fil-fx', 'rank-polo-fx', 'rank-engell-fx', 'rank-kozmik-fx');
         if (currentRank.fx) headerRankBtn.classList.add(currentRank.fx);
@@ -1091,10 +953,7 @@
         if(!activeDrag || !isGameActive) return;
         activeDrag.el.style.left = (e.clientX - activeDrag.ox) + 'px';
         activeDrag.el.style.top  = (e.clientY - activeDrag.oy) + 'px';
-        document.querySelectorAll('.cell').forEach(c => {
-            const m = c.id.match(/^r(\d+)c(\d+)$/);
-            if(m && !board[+m[1]][+m[2]]) c.className = 'cell';
-        });
+        document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
         const coords = getTarget(e);
         if(coords && coords.every(p => !board[p.r][p.c])) {
             coords.forEach(p => document.getElementById(`r${p.r}c${p.c}`).classList.add('preview', activeDrag.color, 'filled'));
@@ -1121,10 +980,7 @@
         if(!placed) dockEl.appendChild(el);
         updateExplosionPreview(null);
         activeDrag = null;
-        document.querySelectorAll('.cell').forEach(c => {
-            const m = c.id.match(/^r(\d+)c(\d+)$/);
-            if(m && !board[+m[1]][+m[2]]) c.className = 'cell';
-        });
+        document.querySelectorAll('.cell').forEach(c => { if(!board[parseInt(c.id[1])][parseInt(c.id[3])]) c.className = 'cell'; });
     }
 
     window.addEventListener('pointercancel', () => { cancelDrag(); });
@@ -1142,9 +998,8 @@
             const dragEl = activeDrag.el;
             activeDrag = null;
             dragEl.remove();
-            checkLines(() => {
-                if(dockEl.querySelectorAll('.piece').length === 0) spawn(); else checkLose();
-            });
+            checkLines();
+            if(dockEl.querySelectorAll('.piece').length === 0) spawn(); else checkLose();
         } else {
             cancelDrag();
         }
@@ -1197,7 +1052,7 @@
         cs.forEach(c => { for(let r=0; r<8; r++) document.getElementById(`r${r}c${c}`).classList.add('will-explode'); });
     }
 
-    function checkLines(onDone) {
+    function checkLines() {
         let rs = [], cs = [];
         for(let i=0; i<8; i++) { if(board[i].every(v => v)) rs.push(i); if(board.every(row => row[i])) cs.push(i); }
         let total = rs.length + cs.length;
@@ -1223,10 +1078,9 @@
             const toClear = [];
             rs.forEach(r => { for(let c=0; c<8; c++) toClear.push({r,c}); });
             cs.forEach(c => { for(let r=0; r<8; r++) if(!rs.includes(r)) toClear.push({r,c}); });
-            blastClearLines(rs, cs, toClear, onDone);
+            blastClearLines(rs, cs, toClear);
         } else {
             comboStreak = 0; // Sıra kırılmadı, seri sıfırla
-            if(onDone) onDone();
         }
     }
 
@@ -1246,7 +1100,10 @@
     }
 
     // Block Blast tarzı sıra temizleme animasyonu
-    function blastClearLines(rs, cs, toClear, onDone) {
+    function blastClearLines(rs, cs, toClear) {
+        const isRow = rs.length > 0;
+        const isCol = cs.length > 0;
+
         // Adım 1: Tüm silinecek hücreler beyaz flash ile parlasın
         toClear.forEach(({r, c}) => {
             const cell = document.getElementById(`r${r}c${c}`);
@@ -1283,7 +1140,6 @@
                     cell.style.cssText = '';
                     cell.className = 'cell';
                 });
-                if(onDone) onDone();
             }, 200);
         }, 60);
     }
@@ -1342,7 +1198,7 @@
         }
     }
 
-    function showComboText(lines, streak) {
+        function showComboText(lines, streak) {
         // Seri yazısı (ard arda kırma)
         if(streak >= 2) {
             const streakEl = document.createElement('div');
@@ -1430,23 +1286,18 @@
         }, 1000);
     }
 
-    // ── Ücretsiz Stok Videolar (Mixkit CDN — CORS yok, GitHub'da çalışır) ──
+    // ── Video dosyaları buraya ekle ──────────────────────────
     const AD_VIDEOS = [
-        'https://mixkit.co/free-stock-video/download/urban-fashion-model-walking-down-the-street-28455',
-        'https://mixkit.co/free-stock-video/download/young-woman-talking-on-a-video-call-on-laptop-5187',
-        'https://mixkit.co/free-stock-video/download/man-hands-with-a-drone-remote-control-5162',
-        'https://mixkit.co/free-stock-video/download/couple-running-in-the-rain-with-umbrella-6247',
-        'https://mixkit.co/free-stock-video/download/woman-drinking-morning-coffee-looking-at-the-city-5159',
-        'https://mixkit.co/free-stock-video/download/aerial-view-of-the-sea-and-sandy-beach-1090',
-        'https://mixkit.co/free-stock-video/download/young-woman-smiling-while-looking-at-phone-5190',
-        'https://mixkit.co/free-stock-video/download/surfer-taking-on-an-ocean-wave-1104',
+        'video1.mp4',
+        'video2.mp4',
+        'video3.mp4',
     ];
+    // ─────────────────────────────────────────────────────────
 
+    let videoSkipTimer = null;
     let videoReviveDone = false;
-    let videoIndex = Math.floor(Math.random() * AD_VIDEOS.length); // rastgele başla
-    let reviveLives = 3;
-    let adTimerInterval = null;
-    let adFinished = false;
+    let videoIndex = 0;
+    let reviveLives = 3; // Her oyunda 3 reklam hakkı
 
     function showToast(msg) {
         const t = document.getElementById('toast');
@@ -1456,100 +1307,59 @@
 
     function reviveGame() {
         if(reviveLives <= 0) return;
-        if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-        reviveLives--;
-        startVideoPlayback();
+        const videos = AD_VIDEOS.filter(v => v && v.trim() !== '');
+        if(videos.length === 0) {
+            if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+            reviveLives--;
+            doRevive(); return;
+        }
+
+        // Gerçek internet kontrolü - fetch ile ping at
+        fetch('https://www.google.com/favicon.ico', { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
+            .then(() => {
+                if(countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+                reviveLives--;
+                startVideoPlayback(videos);
+            })
+            .catch(() => {
+                showToast('📶 İnternet bağlantısı yok!');
+            });
     }
 
-    function startVideoPlayback() {
-        const overlay = document.getElementById('video-overlay');
-        const skipBtn = document.getElementById('ad-skip-btn');
-        const skipInfo = document.getElementById('ad-skip-info');
-        const secondsEl = document.getElementById('ad-seconds');
-
-        // Video seç (döngüsel, rastgele)
-        const src = AD_VIDEOS[videoIndex % AD_VIDEOS.length];
+    function startVideoPlayback(videos) {
+        const src = videos[videoIndex % videos.length];
         videoIndex++;
+        const overlay = document.getElementById('video-overlay');
 
-        // Video elementini sıfırdan oluştur
+        // Eski video elementini temizle, sıfırdan yeni oluştur
         const oldVideo = document.getElementById('ad-video');
         const newVideo = document.createElement('video');
         newVideo.id = 'ad-video';
-        newVideo.style.cssText = 'width:100%; height:100%; object-fit:cover; display:block;';
+        newVideo.style.cssText = 'width:100%; display:block;';
         newVideo.setAttribute('playsinline', '');
         newVideo.setAttribute('webkit-playsinline', '');
         newVideo.setAttribute('muted', '');
-        newVideo.setAttribute('preload', 'auto');
-        newVideo.muted = true;
-        newVideo.playsInline = true;
         oldVideo.replaceWith(newVideo);
 
         videoReviveDone = false;
-        adFinished = false;
-        skipBtn.style.display = 'none';
-        skipInfo.style.display = 'block';
         overlay.style.display = 'flex';
 
-        // Geri sayım — 15 saniye izle, sonra canlan butonu çıksın
-        let remaining = 15;
-        secondsEl.innerText = remaining;
-        if(adTimerInterval) clearInterval(adTimerInterval);
-        adTimerInterval = setInterval(() => {
-            remaining--;
-            secondsEl.innerText = remaining;
-            if(remaining <= 0) {
-                clearInterval(adTimerInterval);
-                adTimerInterval = null;
-                adFinished = true;
-                skipBtn.style.display = 'block';
-                skipInfo.style.display = 'none';
-            }
-        }, 1000);
-
-        // Video yükle ve oynat
-        newVideo.onended = () => {
-            adFinished = true;
-            skipBtn.style.display = 'block';
-            skipInfo.style.display = 'none';
-        };
+        newVideo.onended = () => { closeVideoAndRevive(); };
         newVideo.onerror = () => {
-            // Video yüklenemedi — başka videoyu dene
-            clearInterval(adTimerInterval);
-            const nextSrc = AD_VIDEOS[videoIndex % AD_VIDEOS.length];
-            videoIndex++;
-            newVideo.src = nextSrc;
-            newVideo.load();
-            newVideo.play().catch(() => {
-                // Hiçbiri çalışmadı, direkt canlandır
-                overlay.style.display = 'none';
-                clearInterval(adTimerInterval);
-                doRevive();
-            });
+            overlay.style.display = 'none';
+            showToast('❌ Video oynatılamadı.');
         };
 
         newVideo.src = src;
         newVideo.load();
-        newVideo.play().catch(() => {
-            // iOS autoplay engeli — dokunmayı bekle
-            newVideo.addEventListener('touchstart', () => newVideo.play().catch(() => {}), { once: true, passive: true });
-        });
+        newVideo.play().catch(() => {});
     }
 
-    function skipVideoNow() {
-        if(!adFinished) return; // 15 saniye dolmadan çalışmaz
-        clearInterval(adTimerInterval);
-        adTimerInterval = null;
-        closeVideoAndRevive();
-    }
-
-    // Eski skipVideo fonksiyonu (boş bırak — artık skipVideoNow kullanılıyor)
     function skipVideo() {}
 
     function closeVideoAndRevive() {
         if(videoReviveDone) return;
         videoReviveDone = true;
-        clearInterval(adTimerInterval);
-        adTimerInterval = null;
         const overlay = document.getElementById('video-overlay');
         const videoEl = document.getElementById('ad-video');
         if(videoEl) { videoEl.onended = null; videoEl.onerror = null; videoEl.pause(); }
@@ -1584,4 +1394,3 @@
 </script>
 </body>
 </html>
-
