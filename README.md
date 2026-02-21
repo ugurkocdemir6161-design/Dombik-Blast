@@ -1,0 +1,13 @@
+NEW UPTADE!!
+-main menu
+-setting menu
+-game over screen
+-NEW advert!!
+-NEW block!!
+-More block!!
+-NEW animations!!
+-NEW ranked!!
+-NEW hard mode!!
+-BUG FİX
+-NEW SHAPE
+-AND MORE SKİLL
